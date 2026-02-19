@@ -1,0 +1,1451 @@
+:root {
+  --bg: #0f1216;
+  --panel: #171b22;
+  --text: #e9eef5;
+  --muted: #9fb2c5;
+  --accent: #3a86ff;
+  --danger: #ff5d5d;
+  --chip: #1f2630;
+  --border: #273040;
+  --card-gap: 1.1rem;
+  --roster-card-gap: 16px;
+  --roster-mod-gap: 12px;
+  --roster-card-min: 320px;
+  --card-radius: 16px;
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --card-gap: 0.85rem;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 "Inter", system-ui, -apple-system, Segoe UI, Roboto, "DejaVu Sans", Arial;
+}
+
+a {
+  color: inherit;
+}
+
+.print-sheet {
+  display: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Toolbar */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: linear-gradient(180deg, var(--panel), rgba(23, 27, 34, .9));
+  backdrop-filter: saturate(1.25) blur(7px);
+  border-bottom: 1px solid var(--border);
+  padding: .65rem 1rem 0.85rem;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: .35rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  align-items: center;
+}
+
+.input {
+  background: #0c0f13;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: .45rem .6rem;
+  border-radius: .65rem;
+  min-width: 150px;
+}
+
+.input.number {
+  max-width: 150px;
+}
+
+.input.compact {
+  min-width: 210px;
+}
+
+.btn {
+  background: var(--chip);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: .45rem .75rem;
+  border-radius: .65rem;
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+
+.btn:hover {
+  border-color: #3a86ff55;
+  box-shadow: 0 0 0 2px #3a86ff22;
+  transform: translateY(-1px);
+}
+
+.btn.small {
+  padding: .32rem .55rem;
+  font-size: 13px;
+  border-radius: .55rem;
+}
+
+.btn.tiny {
+  padding: .2rem .45rem;
+  font-size: 12px;
+  border-radius: .5rem;
+}
+
+.btn.icon {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+.btn.danger {
+  background: #2a1b1f;
+  border-color: #563a40;
+  color: #ffb3b3;
+}
+
+.btn.secondary {
+  background: #1c2330;
+  border-color: #2b3648;
+  color: #9fb2c5;
+}
+
+.stats {
+  margin-top: .55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Roster */
+.roster {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  padding: 1.35rem 1.2rem 2rem;
+}
+
+.roster-unit {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 12px 24px rgba(6, 8, 12, .28);
+  padding: 1.1rem 1.2rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.roster-unit__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.roster-unit__summary {
+  display: flex;
+  gap: .85rem;
+  align-items: center;
+}
+
+/* маленькая карта в шапке юнита */
+.roster-unit__image {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .roster-unit__image {
+    width: 100px;
+  }
+}
+
+.roster-unit__meta {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.roster-unit__name {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.roster-unit__cost {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.roster-unit__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+
+.roster-unit__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.roster-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--roster-card-gap);
+  align-content: flex-start;
+  /* Важно: НЕ растягиваем карточки по высоте строки.
+     Иначе при наличии высокой карточки (например, с модом) появляются "красные" пустые области как на скрине. */
+  align-items: flex-start;
+}
+
+.roster-grid--live {
+  margin-top: .2rem;
+}
+
+.roster-card {
+  position: relative;
+  background: var(--chip);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: .55rem .65rem .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  min-width: 0;
+  transition: border-color .2s, box-shadow .2s;
+  box-sizing: border-box;
+}
+
+.roster-grid>.roster-card {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+
+/* Strict width for Portrait cards */
+.roster-card.is-portrait,
+.roster-card.is-portrait-card {
+  width: 240px;
+}
+
+.roster-card.card--unit.is-portrait {
+  /* Персонаж чуть крупнее, чтобы не теряться на фоне карт оружия */
+  width: 340px;
+}
+
+/* Strict width for Landscape cards */
+.roster-card.is-landscape,
+.roster-card.is-landscape-card {
+  width: 340px;
+}
+
+.roster-card--unit,
+.roster-card--item,
+.roster-card--power {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.roster-card--power {
+  grid-column: auto;
+}
+
+.roster-card--drag {
+  box-shadow: 0 0 0 2px #3a86ff55 inset;
+}
+
+.roster-card--drop {
+  box-shadow: 0 0 0 2px #3a86ff99 inset;
+}
+
+.roster-card__drag-handle {
+  position: absolute;
+  top: .6rem;
+  right: .6rem;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(8, 12, 18, .65);
+  color: rgba(233, 238, 245, .65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: grab;
+  user-select: none;
+  z-index: 2;
+}
+
+.roster-card--unit .roster-card__drag-handle,
+.roster-card--power .roster-card__drag-handle {
+  display: none;
+}
+
+/* Image container resets */
+.roster-card__image-thumb {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #0d131a;
+}
+
+/* Strict Aspect Ratios based on orientation class */
+.roster-card.is-portrait .roster-card__image-thumb,
+.roster-card.is-portrait-card .roster-card__image-thumb {
+  aspect-ratio: 63 / 88;
+}
+
+.roster-card.is-landscape .roster-card__image-thumb,
+.roster-card.is-landscape-card .roster-card__image-thumb {
+  aspect-ratio: 3 / 2;
+}
+
+.roster-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.img--rotated {
+  transform: rotate(-90deg) scale(1.55);
+}
+
+/* Cleanup old class */
+
+.roster-card__title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.roster-card__title {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: .25rem;
+}
+
+.roster-card__meta {
+  color: var(--muted);
+  font-size: 13px;
+  display: block;
+  line-height: 1.55;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.roster-card__badges {
+  display: flex;
+  gap: .4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.roster-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .2rem .45rem;
+  border-radius: 999px;
+  background: #101621;
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: #d9e6f8;
+}
+
+.roster-card__actions {
+  display: flex;
+  gap: .4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.roster-card__actions .btn {
+  flex: 0 1 150px;
+  justify-content: center;
+  text-align: center;
+}
+
+.roster-card__actions .btn.tiny {
+  flex: 0 1 120px;
+}
+
+/* Reset grid areas since we use flex column now */
+.roster-card--unit .roster-card__image,
+.roster-card--item .roster-card__image,
+.roster-card--power .roster-card__image {
+  grid-area: auto;
+}
+
+@media (max-width: 720px) {
+  .roster-card--unit {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "image"
+      "body"
+      "actions";
+  }
+
+  .roster-card--item,
+  .roster-card--power {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "image"
+      "body"
+      "actions"
+      "mods";
+    min-width: 0;
+  }
+
+  .roster-card--item .roster-card__image,
+  .roster-card--power .roster-card__image {
+    height: auto;
+    min-height: 0;
+  }
+}
+
+.roster-card__mods {
+  display: grid;
+  gap: var(--roster-mod-gap);
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .roster-grid>.roster-card {
+    flex-basis: 100%;
+  }
+}
+
+.roster-card__mod-card {
+  background: transparent;
+  border: none;
+  padding: .5rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+
+.roster-card__mod-card .mod-actions {
+  display: flex;
+  gap: .45rem;
+  flex-wrap: wrap;
+}
+
+.roster-card__mod-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.roster-card__mod-meta {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.roster-card__mod-image {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: contain;
+  background: var(--panel);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: block;
+}
+
+.roster-card__empty-mod {
+  font-size: 13px;
+  color: var(--muted);
+  padding: .65rem;
+  border: 1px dashed #2d394d;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* Modal / picker */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 120;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal .backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .6);
+}
+
+.modal .panel {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  max-width: min(1280px, 96vw);
+  width: 96vw;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(2, 4, 8, .65);
+}
+
+.panel-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.panel-content .grid {
+  flex: 1;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .85rem 1.15rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.icon {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: .65rem;
+  padding: .3rem .55rem;
+  cursor: pointer;
+}
+
+.filters {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  padding: .65rem 1.1rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+  flex: 0 0 auto;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+
+.filter-row.sub {
+  border-top: 1px solid var(--border);
+  padding-top: .45rem;
+  margin-top: .25rem;
+}
+
+.filter {
+  padding: .32rem .65rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #0c0f13;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.filter.active {
+  outline: 2px solid #3a86ff55;
+}
+
+.filter-toggle {
+  display: flex;
+  gap: .3rem;
+  align-items: center;
+  background: #0c0f13;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: .28rem .55rem;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.filter-toggle[data-active="true"] {
+  outline: 2px solid #3a86ff55;
+}
+
+.grid {
+  padding: 1.2rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.grid.picker-units {
+  /* 4–6 карт в ряд (в зависимости от ширины экрана) */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  /* Не даём разъезжаться в 7–8 колонок на очень широких экранах */
+  max-width: calc(6 * 240px + 5 * 1rem + 2.4rem);
+  margin: 0 auto;
+}
+
+.grid.picker-items {
+  /* 4–6 карт в ряд (в зависимости от ширины экрана) */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  /* Не даём разъезжаться в 7–8 колонок на очень широких экранах */
+  max-width: calc(6 * 240px + 5 * 1rem + 2.4rem);
+  margin: 0 auto;
+}
+
+.grid.picker-mods {
+  /* 4–6 карт в ряд (в зависимости от ширины экрана) */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  /* Не даём разъезжаться в 7–8 колонок на очень широких экранах */
+  max-width: calc(6 * 240px + 5 * 1rem + 2.4rem);
+  margin: 0 auto;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  background: var(--chip);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: .85rem;
+}
+
+.card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  flex: 1;
+}
+
+.card .title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.card .meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.card .actions {
+  display: flex;
+  gap: .45rem;
+}
+
+.card .take {
+  align-self: stretch;
+  margin-top: auto;
+}
+
+.thumb {
+  cursor: pointer;
+}
+
+.thumb-large {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: contain;
+  border-radius: 12px;
+  border: none;
+  background: #fff;
+}
+
+.thumb-item {
+  width: 100%;
+  /* Даем картинке самой задавать высоту, чтобы карта была видна полностью */
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  border: none;
+  background: #fff;
+}
+
+.empty {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .15rem .4rem;
+  font-size: 11px;
+  color: #ffd966;
+  background: #3a2b15;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* === Fallout Builder: переработка UI карточек выбора и ростера === */
+
+/* Плавный ховер и лёгкий "подъём" для всех карточек */
+.card,
+.roster-card {
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+
+.card:hover,
+.roster-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+  border-color: var(--accent);
+}
+
+/* Готовим базу под верхнюю цветную полоску */
+.card,
+.roster-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Верхняя цветная полоска как на бумажных картах */
+.card::before,
+.roster-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 6px;
+  border-radius: 16px 16px 0 0;
+  opacity: .85;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+      var(--accent),
+      rgba(58, 134, 255, .6) 45%,
+      rgba(58, 134, 255, 0) 100%);
+}
+
+/* Разные оттенки полоски для типов карточек */
+.roster-card--unit::before,
+.card.card-unit::before {
+  background: linear-gradient(90deg, #2f7de0, rgba(47, 125, 224, 0) 70%);
+}
+
+.roster-card--item::before,
+.card.card-item::before {
+  background: linear-gradient(90deg, #e0b62f, rgba(224, 182, 47, 0) 70%);
+}
+
+.roster-card--power::before {
+  background: linear-gradient(90deg, #2fe086, rgba(47, 224, 134, 0) 70%);
+}
+
+/* === Карточки в пикерах (выбор юнитов/предметов/модов) ====================== */
+
+/* Структура: картинка сверху, текст посередине, панель действий снизу */
+.card.card-unit,
+.card.card-item {
+  display: grid;
+  grid-template-rows: minmax(120px, auto) 1fr auto;
+  align-content: start;
+  gap: .6rem;
+}
+
+/* Картинка карточки в пикере */
+.card.card-unit .thumb,
+.card.card-item .thumb {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  background: #0d131a;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+/* Ландшафтные изображения в пикере */
+.card.card-item.is-landscape-card .thumb {
+  width: 100%;
+  height: auto;
+}
+
+/* Текст внутри карточки выбора */
+.card.card-unit .card-body,
+.card.card-item .card-body {
+  width: 100%;
+}
+
+/* Панель действий внизу карточки (Change / Remove / Preview) */
+.card .actions {
+  margin: 0;
+  padding: .55rem .6rem;
+  border-top: 1px dashed var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(0, 0, 0, .08));
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+
+.card .actions .btn {
+  flex: 0 1 130px;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Поменьше кнопки внутри action-bar */
+.card .actions .btn.tiny,
+.card .actions .btn.small {
+  padding: .28rem .5rem;
+  font-size: 12px;
+  line-height: 1.2;
+  border-radius: .5rem;
+}
+
+/* === Карточки в ростере (добавленные карты) ================================= */
+
+/* Нижняя панель действий у ростер-карточек */
+.roster-card__actions {
+  width: 100%;
+  margin-top: .3rem;
+  padding-top: .6rem;
+  border-top: 1px dashed var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(0, 0, 0, .05));
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+  display: flex;
+  flex-wrap: nowrap;
+  gap: .45rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.roster-card__actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.roster-card__actions .btn.tiny,
+.roster-card__actions .btn.small {
+  padding: .28rem .5rem;
+  font-size: 12px;
+  line-height: 1.2;
+  border-radius: .5rem;
+}
+
+/* === Моды под предметами ===================================================== */
+
+/* Вложенные "малые карточки" модов */
+.roster-card__mod-card,
+.mod-card {
+  position: relative;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+/* Removed top bar for mods */
+.roster-card__mod-card::before,
+.mod-card::before {
+  display: none;
+}
+
+.mod-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  padding: .75rem .75rem 0;
+  align-items: stretch;
+}
+
+.mod-card__media {
+  display: flex;
+  justify-content: center;
+}
+
+.roster-card__mod-image {
+  width: 100%;
+  /* Моды должны быть крупнее и без лишних рамок */
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: none;
+  margin: 0;
+  display: block;
+  cursor: pointer;
+}
+
+.mod-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  text-align: center;
+  padding: 0 .45rem .25rem;
+}
+
+.roster-card__mod-title {
+  font-weight: 700;
+  letter-spacing: .15px;
+  margin: 0;
+  color: var(--text);
+}
+
+.roster-card__mod-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+/* Панель действий внутри карточки мода */
+.roster-card__mod-card .mod-actions,
+.mod-card__actions {
+  margin-top: .35rem;
+  padding: .6rem .75rem .75rem;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: .5rem;
+}
+
+.roster-card__mod-card .mod-actions .btn,
+.mod-card__actions .btn {
+  width: 100%;
+  justify-content: center;
+  padding: .55rem .75rem;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: .65rem;
+  background: var(--chip);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.roster-card__mod-card .mod-actions .btn.danger,
+.mod-card__actions .btn.danger {
+  background: #3a1a21;
+  border-color: #5a2731;
+}
+
+.roster-card__mod-card .mod-actions .btn:hover,
+.mod-card__actions .btn:hover {
+  box-shadow: 0 0 0 2px rgba(47, 125, 224, .18);
+  transform: translateY(-1px);
+}
+
+.roster-card__mod-card .mod-actions .btn.danger:hover,
+.mod-card__actions .btn.danger:hover {
+  box-shadow: 0 0 0 2px rgba(199, 57, 61, .2);
+}
+
+/* === Бейджи, уникальные карты и перетаскивание ============================== */
+
+/* Бейджи (УНИКАЛЬНО, LOCKED и т.п.) — более "тэговый" вид */
+.roster-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .2rem .45rem;
+  border-radius: 999px;
+  border: 1px solid #58462b;
+  background: #2d2418;
+  color: #ffd977;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .35px;
+}
+
+/* Дополнительно подсвечиваем пометку "УНИКАЛЬНО" в заголовке */
+.card[data-tag="unique"] .title::after {
+  content: " • УНИКАЛЬНО";
+  color: #ffd977;
+  font-weight: 600;
+  margin-left: .25rem;
+}
+
+/* При желании можно также использовать data-атрибут на title у ростер-карточек */
+.roster-card__title[data-unique="1"]::after {
+  content: " • УНИКАЛЬНО";
+  color: #ffd977;
+  font-weight: 600;
+  margin-left: .25rem;
+}
+
+/* Ручка перетаскивания карточек и состояние drag/drop */
+.roster-card__drag-handle {
+  background: rgba(8, 12, 18, .75);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+}
+
+.roster-card--drag {
+  box-shadow: 0 0 0 2px rgba(58, 134, 255, .8) inset;
+}
+
+.roster-card--drop {
+  outline: 2px dashed var(--accent);
+  outline-offset: 3px;
+}
+
+/* === Конец блока переработки UI карточек === */
+
+/* === Cards: базовая корректность и внешний вид как у бумажных карт === */
+
+/* Корневые карточки — не обрезать содержимое (чтобы моды не резало снизу) */
+.card,
+.roster-card {
+  position: relative;
+  overflow: visible;
+}
+
+/* Картинки карточек */
+.card__thumb {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #0d131a;
+  overflow: hidden;
+}
+
+/* показываем карту целиком, как на старом билдере */
+.card__img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  /* ← вместо cover */
+}
+
+/* === ЮНИТЫ В РОСТЕРЕ: карта должна подгонять размер рамки === */
+
+/* Рамка у юнитов подстраивается по содержимому (без лишней высоты) */
+.roster-card--unit .card__thumb {
+  aspect-ratio: auto;
+}
+
+/* А картинка внутри просто максимально широкая,
+   высота берётся автоматически из реального соотношения сторон карты */
+.roster-card--unit .card__img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* у предметов/модов горизонтальные карты, ближе к 3:2, а не 16:9 */
+.card--item .card__thumb,
+.card--mod .card__thumb {
+  aspect-ratio: 3 / 2;
+}
+
+/* Базовые пропорции по типам карт (fallback) */
+
+/* Юниты – вертикальные карты */
+.card--unit .card__thumb {
+  aspect-ratio: 63 / 88;
+}
+
+/* Предметы / моды / перки / силовая броня – горизонтальные */
+.card--item .card__thumb,
+.card--mod .card__thumb,
+.card--perk .card__thumb,
+.card--power .card__thumb {
+  aspect-ratio: 3 / 2;
+}
+
+/* Если JS определил ориентацию, она имеет приоритет (для пикеров) */
+.card.is-landscape .card__thumb {
+  aspect-ratio: 16 / 9;
+}
+
+.card.is-portrait .card__thumb {
+  aspect-ratio: 63 / 88;
+}
+
+/* Панель действий карточки (add/change/remove) */
+.card__actions {
+  margin: 0;
+  padding: .55rem .6rem;
+  border-top: 1px dashed var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(0, 0, 0, .08));
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Кнопки в action-bar компактные, но читаемые */
+.card__actions .btn,
+.card__actions button {
+  padding: .28rem .5rem;
+  font-size: 12px;
+  line-height: 1.2;
+  border-radius: .5rem;
+}
+
+/* Панель действий в ростер-карточках выглядит так же */
+.roster-card__actions {
+  margin-top: .3rem;
+  padding-top: .6rem;
+  border-top: 1px dashed var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(0, 0, 0, .05));
+  border-radius: 0 0 var(--card-radius, 16px) var(--card-radius, 16px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+
+/* === Визуал «как на скрине»: верхняя цветная полоска и hover === */
+
+/* Верхняя цветная полоска на карточках */
+.card::before,
+.roster-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 6px;
+  border-radius: 16px 16px 0 0;
+  opacity: .85;
+  pointer-events: none;
+  background: linear-gradient(90deg, #2f7de0, rgba(47, 125, 224, 0) 70%);
+}
+
+/* Разные оттенки для типов карт (по желанию можно сменить) */
+.card--item::before,
+.roster-card.card--item::before {
+  background: linear-gradient(90deg, #e0b62f, rgba(224, 182, 47, 0) 70%);
+}
+
+.card--power::before,
+.roster-card.card--power::before {
+  background: linear-gradient(90deg, #2fe086, rgba(47, 224, 134, 0) 70%);
+}
+
+/* Лёгкий hover-эффект, не ломающий тёмную тему */
+.card,
+.roster-card {
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+
+.card:hover,
+.roster-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+}
+
+/* Немного усиливаем заголовки и мета-инфу */
+.card .title,
+.roster-card__title {
+  font-weight: 700;
+  font-size: 15.5px;
+}
+
+.card .meta,
+.roster-card__meta {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Бейдж "УНИКАЛЬНО" */
+.card[data-tag="unique"] .title::after,
+.roster-card__title[data-unique="1"]::after {
+  content: " • УНИКАЛЬНО";
+  color: #ffd977;
+  font-weight: 600;
+  margin-left: .25rem;
+}
+
+/* Состояние перетаскивания ростер-карточек */
+.roster-card--drag {
+  box-shadow: 0 0 0 2px rgba(58, 134, 255, .8) inset;
+}
+
+/* === Picker layout: полноразмерные карты без перекрытий === */
+.card.card--picker {
+  cursor: pointer;
+  overflow: visible;
+  padding: .7rem;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+
+.card.card--picker img.thumb,
+.card.card--picker .thumb,
+.card.card--picker .card__thumb {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* В пикере не фиксируем пропорции рамки — показываем карту по её реальному соотношению сторон */
+.card.card--picker .card__thumb {
+  aspect-ratio: auto;
+}
+
+.card.card--picker .card-body,
+.card.card--picker .card__body {
+  position: static;
+  padding: 0;
+  background: none;
+  backdrop-filter: none;
+}
+
+.card.card--picker .title,
+.card.card--picker .meta {
+  text-align: center;
+}
+
+.card.card--picker .card__actions,
+.card.card--picker .actions {
+  position: static;
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+/*
+  Раньше в пикере были оверлеи (которые загораживали карту).
+  Теперь отображаем только карту + подпись (имя/стоимость).
+*/
+.card.card--picker .actions__hint {
+  display: none;
+}
+
+/* === Roster orientation tweaks === */
+.roster-card.is-landscape,
+.roster-card.is-landscape-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.roster-card.is-landscape .roster-card__image.thumb,
+.roster-card.is-landscape-card .roster-card__image.thumb {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: var(--thumb-h);
+}
+
+.roster-card.is-landscape .roster-card__body,
+.roster-card.is-landscape-card .roster-card__body {
+  width: 100%;
+  margin-top: 6px;
+}
+
+button.preview,
+.btn.preview,
+.card .preview {
+  display: none !important;
+}
+
+/* РОСТЕР: обёртка вокруг изображения — это grid-area:image */
+.roster-card--unit .roster-card__image-thumb,
+.roster-card--item .roster-card__image-thumb,
+.roster-card--power .roster-card__image-thumb {
+  grid-area: image;
+  align-self: start;
+}
+
+/* Для юнита убираем искусственный min-height, чтобы не было пустого прямоугольника под картой */
+.roster-card--unit .roster-card__image {
+  min-height: 0;
+}
+
+/* Вертикальное место под картинку силовой брони в списке */
+.roster-card--power .card__thumb--portrait {
+  flex: 0 0 220px;
+  max-width: 220px;
+  aspect-ratio: 63 / 88;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+/* Картинка полностью заполняет этот прямоугольник */
+.roster-card--power .card__img--portrait {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* Контейнер всей карточки выравниваем как и раньше */
+.roster-card.roster-card--power.card--power.roster-card--item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* === Print Styles === */
+/* === Redesign for Power Armor / Vertical Cards === */
+
+.icon-nuka {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: #d00;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.8);
+  vertical-align: middle;
+  margin-left: 6px;
+  box-shadow: 0 0 0 1px #a00;
+  position: relative;
+  top: -1px;
+}
+
+.icon-nuka::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.roster-card--power .roster-card__actions,
+.roster-card--item[data-vertical="true"] .roster-card__actions {
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  padding: 0.5rem !important;
+}
+
+.roster-card--power .btn,
+.roster-card--item[data-vertical="true"] .btn {
+  flex: 1 !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+}
+
+.btn.btn-mod {
+  background: #0d6efd !important;
+  /* Bootstrap Primary Blue */
+  color: white !important;
+  border: none !important;
+}
+
+.btn.btn-mod:hover {
+  background: #0b5ed7 !important;
+}
+
+/* =====================================================
+   Fixes from screenshot (layout / compactness)
+   ===================================================== */
+
+/* Убираем дублирующее имя персонажа в левом верхнем углу блока юнита:
+   название уже есть под карточкой персонажа. */
+.roster-unit__name {
+  display: none;
+}
+
+/* Единая нижняя строка: стоимость + кнопки (как в жёлтом квадрате на скрине) */
+.roster-card__footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .45rem;
+  padding-top: .55rem;
+  border-top: 1px dashed var(--border);
+}
+
+/* Стоимость слева, без переноса */
+.roster-card__cost {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.2;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Кнопки справа, в одну строку */
+.roster-card__footer .roster-card__buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .45rem;
+  padding: 0 !important; /* перебиваем старые правила для __actions */
+  width: auto;
+}
+
+.roster-card__footer .roster-card__buttons .btn {
+  flex: 0 0 auto !important;
+  min-width: 0;
+}
+
+/* Небольшое поджатие высоты карточки (чтобы помещалось 2-3 ряда) */
+.roster-card {
+  padding-bottom: .55rem;
+}

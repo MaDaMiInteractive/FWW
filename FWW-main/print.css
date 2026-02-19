@@ -1,0 +1,126 @@
+:root {
+  /* Print layout gaps (set to 0 to remove separators between cards) */
+  --pdf-gap: 0mm;
+  --pdf-gap-large: 0mm;
+}
+
+@media print {
+
+  /* Paper settings */
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /*
+    IMPORTANT:
+    Using visibility:hidden keeps elements in the layout and creates blank pages.
+    For printing we must remove the whole UI from the flow.
+  */
+  body>*:not(.print-sheet) {
+    display: none !important;
+  }
+
+  .print-sheet {
+    display: block !important;
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* One long sheet that the browser paginates */
+  .sheet {
+    margin: 0;
+  }
+
+  /* Card container */
+  .pdf-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--pdf-gap);
+  }
+
+  /* Default to "small" layout (5 columns) unless overridden by class */
+  .sheet--small .pdf-card,
+  .sheet:not(.sheet--large) .pdf-card {
+    flex: 0 0 calc((100% - (var(--pdf-gap) * 4)) / 5);
+  }
+
+  /* Large layout (3 columns) */
+  .sheet--large .pdf-grid {
+    gap: var(--pdf-gap-large);
+  }
+
+  .sheet--large .pdf-card {
+    flex: 0 0 calc((100% - (var(--pdf-gap-large) * 2)) / 3);
+  }
+
+  /* Optional: a card that should span 2 columns (wide landscape cards) */
+  .sheet--small .pdf-card.span-2 {
+    flex-basis: calc(((100% - (var(--pdf-gap) * 4)) / 5) * 2 + var(--pdf-gap));
+  }
+
+  .sheet--large .pdf-card.span-2 {
+    flex-basis: calc(((100% - (var(--pdf-gap-large) * 2)) / 3) * 2 + var(--pdf-gap-large));
+  }
+
+  .pdf-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .pdf-card img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  .pdf-card__mod {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .pdf-card__mod img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Never use the rotated+scaled live UI style in print */
+  .img--rotated {
+    transform: none !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-unit-block {
+    display: block;
+    width: 100%;
+    margin-bottom: 2mm;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конструктор FWW</title>
+  <link rel="stylesheet" href="styles.css?v=1001">
+  <link rel="stylesheet" href="board_ui/board.css">
+  <link rel="stylesheet" href="board_ui/board_print.css" media="print">
+  <link rel="stylesheet" href="print.css?v=1003" media="print">
+</head>
+
+<body>
+  <div id="printSheet" class="print-sheet"></div>
+  <header class="toolbar">
+    <a class="brand" href="index.html" style="text-decoration:none;color:inherit;">Конструктор FWW</a>
+    <div class="controls">
+      <input id="listName" class="input" placeholder="Название листа">
+      <select id="factionSelect" class="input"></select>
+      <input id="pointsLimit" class="input number" type="number" min="0" placeholder="Лимит очков">
+      <input id="modelsLimit" class="input number" type="number" min="0" placeholder="Лимит моделей">
+      <button id="addUnitBtn" class="btn">Добавить персонажа</button>
+      <button id="saveBtn" class="btn">Сохранить лист</button>
+      <input id="loadInput" type="file" accept="application/json" style="display:none">
+      <button id="loadBtn" class="btn">Загрузить лист</button>
+      <button id="printBtn" class="btn">Печать / PDF</button>
+      <button id="clearBtn" class="btn danger">Очистить</button>
+    </div>
+    <div class="stats">
+      <span>Потрачено: <b id="spent">0</b></span>
+      <span>Выбрано: <b id="unitCount">0</b></span>
+    </div>
+  </header>
+
+  <section id="roster" class="roster" aria-label="Список отряда"></section>
+
+  <section id="board" class="board" aria-label="Растер карт"></section>
+
+  <div id="modalRoot" class="modal hidden">
+    <div class="backdrop"></div>
+    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="panel-header">
+        <div id="modalTitle" class="title"></div>
+        <button id="modalClose" class="icon">✕</button>
+      </div>
+      <div class="panel-content">
+        <div id="filters" class="filters"></div>
+        <div id="pickerList" class="grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <template id="rosterUnitTemplate">
+    <section class="roster-unit">
+      <header class="roster-unit__header">
+        <div class="roster-unit__summary">
+          <img class="roster-unit__image" alt="">
+          <div class="roster-unit__meta">
+            <div class="roster-unit__name"></div>
+            <div class="roster-unit__cost"></div>
+          </div>
+        </div>
+        <div class="roster-unit__actions">
+          <button data-act="addItem" class="btn small">+ карта</button>
+          <button data-act="dup" class="btn small">x2</button>
+          <button data-act="remove" class="btn small danger">Удалить</button>
+        </div>
+      </header>
+      <div class="roster-unit__grid roster-grid roster-grid--live"></div>
+      <footer class="roster-unit__footer">
+        <span>Очки персонажа: <b class="subtotalPoints">0</b></span>
+        <span>Карты: <b class="itemsCount">0</b></span>
+      </footer>
+    </section>
+  </template>
+
+  <script src="app.js?v=1006"></script>
+  <script src="board_ui/board.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const mount = document.getElementById('board');
+      if (mount && window.BoardUI) {
+        BoardUI.mount(mount);
+      }
+    });
+  </script>
+</body>
+
+</html>

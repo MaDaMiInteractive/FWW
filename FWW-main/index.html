@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Конструктор FWW</title>
+  <link rel="stylesheet" href="styles.css?v=1100" />
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+    }
+
+    .home {
+      width: min(980px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.75rem 1.75rem 1.4rem;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, .35);
+    }
+
+    .home__title {
+      margin: 0 0 .35rem;
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .home__subtitle {
+      margin: 0 0 1.25rem;
+      color: var(--muted);
+    }
+
+    .home__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .home__card {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+      padding: 1.15rem 1.15rem 1.05rem;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #0c0f13;
+      transition: border-color .15s, box-shadow .15s, transform .15s;
+    }
+
+    .home__card:hover {
+      border-color: #3a86ff55;
+      box-shadow: 0 0 0 2px #3a86ff22;
+      transform: translateY(-1px);
+    }
+
+    .home__card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .home__card-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .home__footer {
+      margin-top: 1.25rem;
+      color: var(--muted);
+      font-size: 12.5px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem 1rem;
+    }
+
+    .home__hint {
+      padding: .25rem .55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #0c0f13;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="home">
+    <h1 class="home__title">Конструктор FWW</h1>
+    <p class="home__subtitle">Выберите режим работы:</p>
+
+    <div class="home__grid">
+      <a class="home__card" href="free.html">
+        <div class="home__card-title">FREE MODE</div>
+        <p class="home__card-desc">Старый конструктор отряда (очки, лимиты, печать карт).</p>
+      </a>
+
+      <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <a class="home__card" href="campaign.html" style="margin-bottom: 0;">
+          <div class="home__card-title">CAMPAIGN</div>
+          <p class="home__card-desc">Новая "кампания" (форма с вкладками, ручной ввод, сундук/инвентарь).</p>
+        </a>
+        <button onclick="window.location.href='campaign.html'; setTimeout(() => { const btn = document.getElementById('openGeneratorTopBtn'); if (btn) btn.click(); }, 100);" class="btn" style="width: 100%; padding: 0.6rem;">Items generator</button>
+      </div>
+
+      <a class="home__card" href="generator.html">
+        <div class="home__card-title">FWW ITEMS GENERATOR</div>
+        <p class="home__card-desc">Быстрый генератор предметов без привязки к банде/сундуку.</p>
+      </a>
+    </div>
+
+    <div class="home__footer">
+      <span class="home__hint">Стартовая страница: <b>index.html</b></span>
+      <span class="home__hint">Данные сохраняются локально в браузере</span>
+    </div>
+  </main>
+</body>
+
+</html>

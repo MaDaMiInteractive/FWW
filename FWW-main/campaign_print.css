@@ -1,0 +1,96 @@
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Hide modal overlays and tool buttons */
+  .modal,
+  .campaign-tabs,
+  .campaign-footer__right,
+  #openGeneratorTopBtn {
+    display: none !important;
+  }
+
+  .campaign-header {
+    position: static !important;
+    background: #fff !important;
+    border-bottom: 1px solid #000 !important;
+    box-shadow: none !important;
+  }
+
+  .campaign-header__row {
+    padding: 0 0 6mm !important;
+  }
+
+  .campaign-brand {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  .campaign-content {
+    padding: 0 !important;
+  }
+
+  .campaign-footer {
+    position: static !important;
+    background: #fff !important;
+    border-top: 1px solid #000 !important;
+    box-shadow: none !important;
+    padding: 6mm 0 0 !important;
+    margin-top: 6mm !important;
+  }
+
+  .panel-block,
+  .loc-card,
+  .generator__weights,
+  .generator__types,
+  .generator__results {
+    background: #fff !important;
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+  }
+
+  .fac {
+    border: 1px dashed #000 !important;
+  }
+
+  .input,
+  select.input {
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid #000 !important;
+  }
+
+  .btn {
+    display: none !important;
+  }
+
+  .card-tile,
+  .unit-card,
+  .stash-card {
+    background: #fff !important;
+    border: 1px solid #000 !important;
+  }
+
+  .card-tile__meta,
+  .home__card-desc,
+  .home__subtitle,
+  .field label {
+    color: #000 !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

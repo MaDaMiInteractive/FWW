@@ -1,0 +1,235 @@
+.board {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: #0e0e0e;
+}
+
+.board__stack {
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background: #1a1a1f;
+  border: 1px solid #2c2c33;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.stack__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #dfe6f0;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.stack__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 20px;
+  background: #2e3b4a;
+  color: #c6d4e2;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  background: #0f1116;
+  border-radius: 14px;
+  border: 1px solid #2c2c33;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  color: #dfe6f0;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+
+/* Карточки превью: два формата — вертикальный и горизонтальный */
+.card-preview {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.card__frame {
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  background: radial-gradient(circle at 20% 20%, #1c2330, #0f121a 55%);
+  border: 1px solid #2f3745;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.card-preview--portrait {
+  aspect-ratio: 63 / 88;
+}
+
+.card-preview--landscape {
+  aspect-ratio: 88 / 63;
+}
+
+
+.card-preview img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;          /* показываем целиком, без обрезки */
+}
+
+.card__img {
+  border-radius: 10px;
+  object-position: center;
+}
+
+.card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.card__toolbar {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.btn {
+  appearance: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #304b63;
+  color: #e8f0f8;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.btn:hover {
+  background: #3b5c7a;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--danger {
+  background: #5a2430;
+}
+
+.btn--danger:hover {
+  background: #762e3d;
+}
+
+.stack__children {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.mod-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  background: #13161c;
+  border: 1px dashed #2f3a4a;
+  border-radius: 10px;
+  color: #dfe6f0;
+}
+
+.mod-chip__title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.mod-chip__actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.board::-webkit-scrollbar {
+  height: 10px;
+}
+
+.board::-webkit-scrollbar-track {
+  background: #0f0f13;
+  border-radius: 999px;
+}
+
+.board::-webkit-scrollbar-thumb {
+  background: #3a4656;
+  border-radius: 999px;
+  border: 2px solid #0f0f13;
+}
+
+.board::-webkit-scrollbar-thumb:hover {
+  background: #4b5a70;
+}
+
+/* Исправление для силовой брони: делаем её вертикальной */
+.card--power-armor .card__frame {
+  aspect-ratio: 63 / 88 !important; /* Стандартная вертикальная пропорция */
+}
+
+/* Гарантируем, что картинка внутри будет видна полностью */
+.card--power-armor .card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Вписать картинку целиком */
+  transform: none !important;
+}
+
+/* Исправление для Химии, Алкоголя и Модификаций, если JS не сработает сразу */
+.card[data-type="chem"] .card__frame,
+.card[data-type="alcohol"] .card__frame,
+.card[data-type="mod"] .card__frame {
+    aspect-ratio: 63 / 88 !important;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+
+  .btn,
+  .card__toolbar {
+    display: none !important;
+  }
+
+  .board {
+    overflow: visible;
+    padding: 0;
+    gap: 12px;
+  }
+
+  .board__stack {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #999;
+    background: #fff;
+    color: #000;
+  }
+
+}
