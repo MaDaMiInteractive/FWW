@@ -4,9 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FWW Campaign</title>
+  <title>Кампания FWW</title>
 
-  <!-- Base styles reused from the original builder (modal, cards, buttons, inputs) -->
   <link rel="stylesheet" href="styles.css?v=1100" />
   <link rel="stylesheet" href="campaign.css?v=1100" />
   <link rel="stylesheet" href="campaign_print.css?v=1100" media="print" />
@@ -19,22 +18,22 @@
 
       <div class="campaign-meta">
         <div class="field">
-          <label>Faction Name</label>
-          <input id="metaFactionName" class="input" placeholder="Faction Name" />
+          <label>Название фракции</label>
+          <input id="metaFactionName" class="input" placeholder="Название фракции" />
         </div>
 
         <div class="field">
-          <label>Crew Name</label>
-          <input id="metaCrewName" class="input" placeholder="Crew Name" />
+          <label>Название банды</label>
+          <input id="metaCrewName" class="input" placeholder="Название банды" />
         </div>
 
         <div class="field">
-          <label>Caps</label>
+          <label>Крышки</label>
           <input id="metaCaps" class="input number" type="number" min="0" />
         </div>
 
         <div class="field">
-          <label>Scout</label>
+          <label>Разведка</label>
           <div class="numstep">
             <button class="btn small" data-step="scout" data-delta="-1">-</button>
             <input id="metaScout" class="input number smallnum" type="number" />
@@ -61,14 +60,14 @@
         </div>
 
         <div class="field">
-          <label>Tier</label>
+          <label>Тир</label>
           <input id="metaTier" class="input number" type="number" min="0" />
         </div>
 
         <div class="field">
-          <label>Rep</label>
+          <label>Репутация</label>
           <select id="metaRep" class="input">
-            <option value="">—</option>
+            <option value="">-</option>
             <option>0</option>
             <option>1</option>
             <option>2</option>
@@ -79,55 +78,52 @@
         </div>
 
         <div class="field field--note">
-          <label>Note</label>
-          <input id="metaNote" class="input" placeholder="(опционально)" />
+          <label>Заметка</label>
+          <input id="metaNote" class="input" placeholder="Необязательно" />
         </div>
 
-        <button id="openGeneratorTopBtn" class="btn secondary campaign-genbtn">Items generator</button>
+        <button id="openGeneratorTopBtn" class="btn secondary campaign-genbtn">Генератор предметов</button>
       </div>
     </div>
 
-    <nav class="campaign-tabs" aria-label="Campaign tabs">
-      <button class="tab" data-tab="Locations">Locations</button>
-      <button class="tab" data-tab="Units">Units</button>
-      <button class="tab" data-tab="Inventory">Inventory</button>
-      <button class="tab" data-tab="Market">Market</button>
-      <button class="tab" data-tab="Craft">Craft</button>
-      <button class="tab" data-tab="Caravans">Caravans</button>
-      <button class="tab" data-tab="Captives">Captives</button>
-      <button class="tab" data-tab="TurnLog">Turn's Log</button>
+    <nav class="campaign-tabs" aria-label="Вкладки кампании">
+      <button class="tab" data-tab="Locations">Локации</button>
+      <button class="tab" data-tab="Units">Персонажи</button>
+      <button class="tab" data-tab="Inventory">Инвентарь</button>
+      <button class="tab" data-tab="Market">Рынок</button>
+      <button class="tab" data-tab="Craft">Крафт</button>
+      <button class="tab" data-tab="Caravans">Караваны</button>
+      <button class="tab" data-tab="Captives">Пленники</button>
+      <button class="tab" data-tab="TurnLog">Журнал хода</button>
     </nav>
   </header>
 
-  <main id="campaignContent" class="campaign-content" aria-label="Campaign content"></main>
+  <main id="campaignContent" class="campaign-content" aria-label="Содержимое кампании"></main>
 
   <footer class="campaign-footer">
     <div class="campaign-footer__left">
       <div class="field">
-        <label>Player Name</label>
-        <input id="metaPlayerName" class="input" placeholder="Player Name" />
+        <label>Имя игрока</label>
+        <input id="metaPlayerName" class="input" placeholder="Имя игрока" />
       </div>
     </div>
 
     <div class="campaign-footer__right">
-      <button id="newCrewBtn" class="btn danger">New Crew</button>
-
-      <button id="savePdfBtn" class="btn">Save as pdf</button>
-
-      <button id="saveTxtBtn" class="btn">Save as txt</button>
+      <button id="newCrewBtn" class="btn danger">Новая банда</button>
+      <button id="savePdfBtn" class="btn">Сохранить в PDF</button>
+      <button id="saveTxtBtn" class="btn">Сохранить в TXT</button>
 
       <input id="loadInput" type="file" accept=".json,.txt,application/json,text/plain" style="display:none" />
-      <button id="loadCrewBtn" class="btn">Load Crew</button>
+      <button id="loadCrewBtn" class="btn">Загрузить банду</button>
     </div>
   </footer>
 
-  <!-- Reusable picker modal (units / items / stash / perks / upgrades) -->
   <div id="modalRoot" class="modal hidden">
     <div class="backdrop"></div>
     <div class="panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="panel-header">
         <div id="modalTitle" class="title"></div>
-        <button id="modalClose" class="icon">✕</button>
+        <button id="modalClose" class="icon">x</button>
       </div>
       <div class="panel-content">
         <div id="modalTools" class="filters"></div>
@@ -136,13 +132,12 @@
     </div>
   </div>
 
-  <!-- Items generator modal -->
   <div id="itemsGenRoot" class="modal hidden">
     <div class="backdrop"></div>
     <div class="panel panel--generator" role="dialog" aria-modal="true" aria-labelledby="itemsGenTitle">
       <div class="panel-header">
-        <div id="itemsGenTitle" class="title">Items generator</div>
-        <button id="itemsGenClose" class="icon">✕</button>
+        <div id="itemsGenTitle" class="title">Генератор предметов</div>
+        <button id="itemsGenClose" class="icon">x</button>
       </div>
 
       <div class="panel-content generator">
@@ -152,80 +147,77 @@
             <div class="generator__weights-grid">
               <label class="wrow">
                 <span class="dot dot--red"></span>
-                <span>Красный (обычная редкость, выпадает чаще)</span>
+                <span>Красный</span>
                 <input id="wRed" class="input number smallnum" type="number" min="0" value="5" />
               </label>
               <label class="wrow">
                 <span class="dot dot--black"></span>
-                <span>Чёрный (реже)</span>
+                <span>Черный</span>
                 <input id="wBlack" class="input number smallnum" type="number" min="0" value="2" />
               </label>
               <label class="wrow">
                 <span class="dot dot--green"></span>
-                <span>Зелёный (реже всего)</span>
+                <span>Зеленый</span>
                 <input id="wGreen" class="input number smallnum" type="number" min="0" value="1" />
               </label>
             </div>
-            <div class="generator__weights-hint">Выберите тип предмета в одной из строк (красный/чёрный/зелёный), затем нажмите Generate item.</div>
+            <div class="generator__weights-hint">Выберите тип предмета в одной из строк, затем нажмите «Сгенерировать предмет».</div>
           </div>
 
           <div class="generator__types">
             <div class="generator__types-title">Типы предметов</div>
 
             <div class="ig-rows">
-              <!-- Красный ряд (первый) - обычная редкость, выпадает чаще -->
               <div class="ig-row ig-row--red" data-rarity="red">
-                <button class="ig-btn" data-type="Weapons" title="Weapons">🔫</button>
-                <button class="ig-btn" data-type="Armor" title="Armor">🛡️</button>
-                <button class="ig-btn" data-type="Clothes" title="Clothes">👕</button>
-                <button class="ig-btn" data-type="Alcohol" title="Alcohol">🍸</button>
-                <button class="ig-btn" data-type="Gear" title="Gear">🔧</button>
-                <button class="ig-btn" data-type="Junk" title="Junk">🛒</button>
-                <button class="ig-btn" data-type="Mods" title="Mods">⚙️</button>
-                <button class="ig-btn" data-type="Food" title="Food">🍲</button>
-                <button class="ig-btn" data-type="Chems" title="Chems">💊</button>
-                <button class="ig-btn" data-type="PowerArmor" title="Power Armor">😷</button>
+                <button class="ig-btn" data-type="Weapons" title="Оружие">&#128299;</button>
+                <button class="ig-btn" data-type="Armor" title="Броня">&#128737;</button>
+                <button class="ig-btn" data-type="Clothes" title="Одежда">&#128085;</button>
+                <button class="ig-btn" data-type="Alcohol" title="Алкоголь">&#127864;</button>
+                <button class="ig-btn" data-type="Gear" title="Снаряжение">&#128295;</button>
+                <button class="ig-btn" data-type="Junk" title="Хлам">&#128722;</button>
+                <button class="ig-btn" data-type="Mods" title="Моды">&#9881;</button>
+                <button class="ig-btn" data-type="Food" title="Еда">&#127858;</button>
+                <button class="ig-btn" data-type="Chems" title="Химия">&#128138;</button>
+                <button class="ig-btn" data-type="PowerArmor" title="Силовая броня">&#129520;</button>
               </div>
 
-              <!-- Черный ряд (второй) - реже -->
               <div class="ig-row ig-row--black" data-rarity="black">
-                <button class="ig-btn" data-type="Weapons" title="Weapons">🔫</button>
-                <button class="ig-btn" data-type="Armor" title="Armor">🛡️</button>
-                <button class="ig-btn" data-type="Clothes" title="Clothes">👕</button>
-                <button class="ig-btn" data-type="Alcohol" title="Alcohol">🍸</button>
-                <button class="ig-btn" data-type="Gear" title="Gear">🔧</button>
-                <button class="ig-btn" data-type="Junk" title="Junk">🛒</button>
-                <button class="ig-btn" data-type="Mods" title="Mods">⚙️</button>
-                <button class="ig-btn" data-type="Food" title="Food">🍲</button>
-                <button class="ig-btn" data-type="Chems" title="Chems">💊</button>
-                <button class="ig-btn" data-type="PowerArmor" title="Power Armor">😷</button>
+                <button class="ig-btn" data-type="Weapons" title="Оружие">&#128299;</button>
+                <button class="ig-btn" data-type="Armor" title="Броня">&#128737;</button>
+                <button class="ig-btn" data-type="Clothes" title="Одежда">&#128085;</button>
+                <button class="ig-btn" data-type="Alcohol" title="Алкоголь">&#127864;</button>
+                <button class="ig-btn" data-type="Gear" title="Снаряжение">&#128295;</button>
+                <button class="ig-btn" data-type="Junk" title="Хлам">&#128722;</button>
+                <button class="ig-btn" data-type="Mods" title="Моды">&#9881;</button>
+                <button class="ig-btn" data-type="Food" title="Еда">&#127858;</button>
+                <button class="ig-btn" data-type="Chems" title="Химия">&#128138;</button>
+                <button class="ig-btn" data-type="PowerArmor" title="Силовая броня">&#129520;</button>
               </div>
 
-              <!-- Зеленый ряд (третий) - реже всего -->
               <div class="ig-row ig-row--green" data-rarity="green">
-                <button class="ig-btn" data-type="Weapons" title="Weapons">🔫</button>
-                <button class="ig-btn" data-type="Armor" title="Armor">🛡️</button>
-                <button class="ig-btn" data-type="Clothes" title="Clothes">👕</button>
-                <button class="ig-btn" data-type="Alcohol" title="Alcohol">🍸</button>
-                <button class="ig-btn" data-type="Gear" title="Gear">🔧</button>
-                <button class="ig-btn" data-type="Junk" title="Junk">🛒</button>
-                <button class="ig-btn" data-type="Mods" title="Mods">⚙️</button>
-                <button class="ig-btn" data-type="Food" title="Food">🍲</button>
-                <button class="ig-btn" data-type="Chems" title="Chems">💊</button>
-                <button class="ig-btn" data-type="PowerArmor" title="Power Armor">😷</button>
+                <button class="ig-btn" data-type="Weapons" title="Оружие">&#128299;</button>
+                <button class="ig-btn" data-type="Armor" title="Броня">&#128737;</button>
+                <button class="ig-btn" data-type="Clothes" title="Одежда">&#128085;</button>
+                <button class="ig-btn" data-type="Alcohol" title="Алкоголь">&#127864;</button>
+                <button class="ig-btn" data-type="Gear" title="Снаряжение">&#128295;</button>
+                <button class="ig-btn" data-type="Junk" title="Хлам">&#128722;</button>
+                <button class="ig-btn" data-type="Mods" title="Моды">&#9881;</button>
+                <button class="ig-btn" data-type="Food" title="Еда">&#127858;</button>
+                <button class="ig-btn" data-type="Chems" title="Химия">&#128138;</button>
+                <button class="ig-btn" data-type="PowerArmor" title="Силовая броня">&#129520;</button>
               </div>
             </div>
 
             <div class="generator__actions">
-              <button id="genOneBtn" class="btn">Generate item</button>
-              <button id="addToStashBtn" class="btn secondary">Add to stash</button>
+              <button id="genOneBtn" class="btn">Сгенерировать предмет</button>
+              <button id="addToStashBtn" class="btn secondary">Добавить в сундук</button>
             </div>
           </div>
         </div>
 
         <div class="generator__results">
           <div class="generator__results-title">Сгенерированные карты</div>
-          <div id="genResults" class="gen-grid" aria-label="Generated items grid"></div>
+          <div id="genResults" class="gen-grid" aria-label="Сетка сгенерированных предметов"></div>
         </div>
       </div>
     </div>

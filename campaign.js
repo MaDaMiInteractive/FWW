@@ -117,7 +117,7 @@
 
   // -------------------- state --------------------
   const STORAGE_KEY = 'fww_campaign_state_v2';
-  const STASH_IMG = 'images/units/stash.png';
+  const STASH_IMG = 'images/stash-placeholder.svg';
 
   function makeDefaultLocation() {
     return {
@@ -302,7 +302,7 @@
     title.textContent = tabKey;
     const p = document.createElement('div');
     p.className = 'placeholder';
-    p.textContent = 'Раздел в разработке. Сейчас реализованы: Locations / Units / Inventory + Items generator.';
+    p.textContent = 'Раздел в разработке. Сейчас доступны: локации, персонажи, инвентарь и генератор предметов.';
     block.appendChild(title);
     block.appendChild(p);
     contentEl.appendChild(block);
@@ -315,12 +315,12 @@
 
     const title = document.createElement('h2');
     title.className = 'section-title';
-    title.textContent = 'Locations';
+    title.textContent = 'Локации';
     top.appendChild(title);
 
     const addBtn = document.createElement('button');
     addBtn.className = 'btn';
-    addBtn.textContent = 'New Location';
+    addBtn.textContent = 'Новая локация';
     addBtn.addEventListener('click', () => {
       state.locations.push(makeDefaultLocation());
       persistState();
@@ -333,7 +333,7 @@
     if (!state.locations.length) {
       const empty = document.createElement('div');
       empty.className = 'panel-block placeholder';
-      empty.textContent = 'Пока нет локаций. Нажмите “New Location”.';
+      empty.textContent = 'Пока нет локаций. Нажмите «Новая локация».';
       contentEl.appendChild(empty);
       return;
     }
@@ -349,12 +349,12 @@
       head.className = 'loc-card__head';
       const hTitle = document.createElement('div');
       hTitle.className = 'loc-card__title';
-      hTitle.textContent = `Location ${idx + 1}`;
+      hTitle.textContent = `Локация ${idx + 1}`;
       head.appendChild(hTitle);
 
       const del = document.createElement('button');
       del.className = 'btn danger';
-      del.textContent = 'Delete location';
+      del.textContent = 'Удалить локацию';
       del.addEventListener('click', () => {
         state.locations.splice(idx, 1);
         // Also detach from units
@@ -372,16 +372,16 @@
       const grid = document.createElement('div');
       grid.className = 'form-grid';
 
-      grid.appendChild(fieldInput('Location Name', loc.name || '', (v) => { loc.name = v; persistState(); }, 'col-6'));
-      grid.appendChild(fieldInput('Coordinate', loc.coordinate || '', (v) => { loc.coordinate = v; persistState(); }, 'col-3'));
-      grid.appendChild(fieldInput('Hazard', loc.hazard || '', (v) => { loc.hazard = v; persistState(); }, 'col-3'));
+      grid.appendChild(fieldInput('Название локации', loc.name || '', (v) => { loc.name = v; persistState(); }, 'col-6'));
+      grid.appendChild(fieldInput('Координаты', loc.coordinate || '', (v) => { loc.coordinate = v; persistState(); }, 'col-3'));
+      grid.appendChild(fieldInput('Опасность', loc.hazard || '', (v) => { loc.hazard = v; persistState(); }, 'col-3'));
 
       card.appendChild(grid);
 
       // Facilities tiers
       const facTitle = document.createElement('div');
       facTitle.className = 'fac-title';
-      facTitle.textContent = 'Facilities';
+      facTitle.textContent = 'Постройки';
       card.appendChild(facTitle);
 
       const tiers = document.createElement('div');
@@ -393,7 +393,7 @@
 
         const tTitle = document.createElement('div');
         tTitle.className = 'tier__title';
-        tTitle.textContent = `Tier ${tierObj.tier ?? (tIdx + 1)}`;
+        tTitle.textContent = `Тир ${tierObj.tier ?? (tIdx + 1)}`;
         tier.appendChild(tTitle);
 
         (tierObj.slots || []).forEach((slot, sIdx) => {
@@ -413,7 +413,7 @@
           const chk = document.createElement('input');
           chk.type = 'checkbox';
           chk.checked = !!slot.active;
-          chk.title = 'active';
+          chk.title = 'Активно';
           chk.addEventListener('change', () => {
             slot.active = chk.checked;
             persistState();
@@ -489,7 +489,7 @@
 
     const title = document.createElement('h2');
     title.className = 'section-title';
-    title.textContent = 'Units';
+    title.textContent = 'Персонажи';
     nav.appendChild(title);
 
     const prevBtn = document.createElement('button');
@@ -521,13 +521,13 @@
 
     const addBtn = document.createElement('button');
     addBtn.className = 'btn';
-    addBtn.textContent = 'Add model';
+    addBtn.textContent = 'Добавить персонажа';
     addBtn.addEventListener('click', () => openUnitPicker());
     nav.appendChild(addBtn);
 
     const delBtn = document.createElement('button');
     delBtn.className = 'btn danger';
-    delBtn.textContent = 'Del Model';
+    delBtn.textContent = 'Удалить персонажа';
     delBtn.disabled = !state.units.length;
     delBtn.addEventListener('click', () => {
       if (!state.units.length) return;
@@ -545,7 +545,7 @@
     locWrap.className = 'field';
     locWrap.style.minWidth = '220px';
     const locLabel = document.createElement('label');
-    locLabel.textContent = 'Location';
+    locLabel.textContent = 'Локация';
     const locSelect = document.createElement('select');
     locSelect.className = 'input';
     locSelect.innerHTML = '';
@@ -558,7 +558,7 @@
       const opt = document.createElement('option');
       opt.value = loc.id;
       const display = (loc.name || '').trim();
-      opt.textContent = display ? display : `Location ${i + 1}`;
+      opt.textContent = display ? display : `Локация ${i + 1}`;
       locSelect.appendChild(opt);
     });
 
@@ -579,7 +579,7 @@
     if (!state.units.length) {
       const empty = document.createElement('div');
       empty.className = 'panel-block placeholder';
-      empty.textContent = 'Пока нет персонажей. Нажмите “Add model”.';
+      empty.textContent = 'Пока нет персонажей. Нажмите «Добавить персонажа».';
       contentEl.appendChild(empty);
       return;
     }
@@ -595,7 +595,7 @@
 
     const leftTitle = document.createElement('div');
     leftTitle.className = 'section-title';
-    leftTitle.textContent = 'Unit card & stats';
+    leftTitle.textContent = 'Карточка и параметры';
     left.appendChild(leftTitle);
 
     const card = document.createElement('div');
@@ -610,8 +610,8 @@
     grid.className = 'form-grid';
     grid.style.marginTop = '.9rem';
 
-    grid.appendChild(fieldInput('Unit Name', unit.name || '', (v) => { unit.name = v; persistState(); }, 'col-8'));
-    grid.appendChild(fieldInput('Rank', unit.rank || '', (v) => { unit.rank = v; persistState(); }, 'col-4'));
+    grid.appendChild(fieldInput('Имя персонажа', unit.name || '', (v) => { unit.name = v; persistState(); }, 'col-8'));
+    grid.appendChild(fieldInput('Ранг', unit.rank || '', (v) => { unit.rank = v; persistState(); }, 'col-4'));
 
     // XP stepper
     const xpWrap = document.createElement('div');
@@ -656,7 +656,7 @@
     const costWrap = document.createElement('div');
     costWrap.className = 'field col-8';
     const cLabel = document.createElement('label');
-    cLabel.textContent = 'Total cost (auto)';
+    cLabel.textContent = 'Общая стоимость';
     const cVal = document.createElement('input');
     cVal.className = 'input number';
     cVal.type = 'number';
@@ -670,37 +670,37 @@
     const stWrap = document.createElement('div');
     stWrap.className = 'field col-12';
     const stLabel = document.createElement('label');
-    stLabel.textContent = 'Status';
+    stLabel.textContent = 'Статус';
     const stRow = document.createElement('div');
     stRow.className = 'toggles';
 
-    stRow.appendChild(statusBtn('Captive', unit.captive, (v) => {
+    stRow.appendChild(statusBtn('Пленник', unit.captive, (v) => {
       unit.captive = v;
       if (v) unit.sitOut = false; // optional
       persistState();
       renderUnits();
     }, 'danger'));
 
-    stRow.appendChild(statusBtn('Sit Out', unit.sitOut, (v) => { unit.sitOut = v; persistState(); renderUnits(); }, 'secondary'));
-    stRow.appendChild(statusBtn('Absent', unit.absent, (v) => { unit.absent = v; persistState(); renderUnits(); }, 'danger'));
-    stRow.appendChild(statusBtn('PA training', unit.paTraining, (v) => { unit.paTraining = v; persistState(); renderUnits(); }, 'danger'));
+    stRow.appendChild(statusBtn('Пропускает ход', unit.sitOut, (v) => { unit.sitOut = v; persistState(); renderUnits(); }, 'secondary'));
+    stRow.appendChild(statusBtn('Отсутствует', unit.absent, (v) => { unit.absent = v; persistState(); renderUnits(); }, 'danger'));
+    stRow.appendChild(statusBtn('Обучение СБ', unit.paTraining, (v) => { unit.paTraining = v; persistState(); renderUnits(); }, 'danger'));
 
     stWrap.appendChild(stLabel);
     stWrap.appendChild(stRow);
     grid.appendChild(stWrap);
 
-    grid.appendChild(fieldInput('Bounty', unit.bounty || '', (v) => { unit.bounty = v; persistState(); }, 'col-12'));
+    grid.appendChild(fieldInput('Награда', unit.bounty || '', (v) => { unit.bounty = v; persistState(); }, 'col-12'));
 
-    grid.appendChild(fieldInput('Addicted', unit.addicted || '', (v) => { unit.addicted = v; persistState(); }, 'col-12'));
+    grid.appendChild(fieldInput('Зависимость', unit.addicted || '', (v) => { unit.addicted = v; persistState(); }, 'col-12'));
 
-    const inj1 = fieldInput('Injuries #1', unit.injuries?.[0] || '', (v) => { unit.injuries[0] = v; persistState(); }, 'col-4');
-    const inj2 = fieldInput('Injuries #2', unit.injuries?.[1] || '', (v) => { unit.injuries[1] = v; persistState(); }, 'col-4');
-    const inj3 = fieldInput('Injuries #3', unit.injuries?.[2] || '', (v) => { unit.injuries[2] = v; persistState(); }, 'col-4');
+    const inj1 = fieldInput('Травма 1', unit.injuries?.[0] || '', (v) => { unit.injuries[0] = v; persistState(); }, 'col-4');
+    const inj2 = fieldInput('Травма 2', unit.injuries?.[1] || '', (v) => { unit.injuries[1] = v; persistState(); }, 'col-4');
+    const inj3 = fieldInput('Травма 3', unit.injuries?.[2] || '', (v) => { unit.injuries[2] = v; persistState(); }, 'col-4');
     grid.appendChild(inj1);
     grid.appendChild(inj2);
     grid.appendChild(inj3);
 
-    grid.appendChild(fieldInput('Notes', unit.notes || '', (v) => { unit.notes = v; persistState(); }, 'col-12'));
+    grid.appendChild(fieldInput('Заметки', unit.notes || '', (v) => { unit.notes = v; persistState(); }, 'col-12'));
 
     left.appendChild(grid);
 
@@ -710,10 +710,10 @@
 
     const subTabs = document.createElement('div');
     subTabs.className = 'unit-subtabs';
-    ['Equipment', 'Upgrades'].forEach(key => {
+    [['Equipment', 'Снаряжение'], ['Upgrades', 'Улучшения']].forEach(([key, label]) => {
       const b = document.createElement('button');
       b.className = 'tab';
-      b.textContent = key;
+      b.textContent = label;
       b.dataset.subtab = key;
       b.classList.toggle('active', state.unitSubTab === key);
       b.addEventListener('click', () => {
@@ -762,16 +762,16 @@
 
     const title = document.createElement('div');
     title.className = 'section-title';
-    title.textContent = 'Equipment';
+    title.textContent = 'Снаряжение';
     head.appendChild(title);
 
     const addItemBtn = document.createElement('button');
     addItemBtn.className = 'btn';
-    addItemBtn.textContent = 'Add Item (from stash)';
+    addItemBtn.textContent = 'Добавить предмет из сундука';
     addItemBtn.disabled = disabled || state.stash.items.length === 0 || (unit.equipment?.length ?? 0) >= 8;
     if (unit.equipment?.length >= 8) addItemBtn.title = 'Достигнут лимит 8 предметов (как на форме)';
     addItemBtn.addEventListener('click', () => openStashPicker({
-      title: `Stash → ${unit.name}`,
+      title: `Сундук -> ${unit.name}`,
       onPick: (itemId) => {
         const idx = state.stash.items.indexOf(itemId);
         if (idx >= 0) state.stash.items.splice(idx, 1);
@@ -788,7 +788,7 @@
     const perkTitle = document.createElement('div');
     perkTitle.className = 'section-title';
     perkTitle.style.marginTop = '.6rem';
-    perkTitle.textContent = 'Perk slots';
+    perkTitle.textContent = 'Слоты перков';
     host.appendChild(perkTitle);
 
     const perkGrid = document.createElement('div');
@@ -799,9 +799,9 @@
       const threshold = PERK_XP_THRESHOLDS[i];
 
       if (!perkId) {
-        perkGrid.appendChild(emptySlotTile(`Perk #${i + 1}`, `XP ${threshold}`, disabled ? null : () => {
+        perkGrid.appendChild(emptySlotTile(`Перк ${i + 1}`, `XP ${threshold}`, disabled ? null : () => {
           openItemLibraryPicker({
-            title: `Add perk → ${unit.name} (slot ${i + 1})`,
+            title: `Добавить перк -> ${unit.name} (слот ${i + 1})`,
             filter: (it) => !!(it.cats && it.cats.Perks),
             onPick: (it) => {
               unit.perkSlots[i] = it.id;
@@ -813,11 +813,11 @@
       } else {
         const perk = db.itemsById[perkId];
         perkGrid.appendChild(cardTileFromItem(perk, {
-          meta: `Perk • XP ${threshold}`,
+          meta: `Перк • XP ${threshold}`,
           actions: disabled ? [] : [
-            { label: 'Add perk', kind: 'secondary', onClick: () => {
+            { label: 'Заменить перк', kind: 'secondary', onClick: () => {
               openItemLibraryPicker({
-                title: `Replace perk → ${unit.name} (slot ${i + 1})`,
+                title: `Заменить перк -> ${unit.name} (слот ${i + 1})`,
                 filter: (it) => !!(it.cats && it.cats.Perks),
                 onPick: (it) => {
                   unit.perkSlots[i] = it.id;
@@ -826,7 +826,7 @@
                 }
               });
             }},
-            { label: 'Del perk', kind: 'danger', onClick: () => {
+            { label: 'Удалить перк', kind: 'danger', onClick: () => {
               unit.perkSlots[i] = null;
               persistState();
               renderUnits();
@@ -841,14 +841,14 @@
     const itemsTitle = document.createElement('div');
     itemsTitle.className = 'section-title';
     itemsTitle.style.marginTop = '1rem';
-    itemsTitle.textContent = 'Items (max 8)';
+    itemsTitle.textContent = 'Предметы (максимум 8)';
     host.appendChild(itemsTitle);
 
     const items = (unit.equipment || []).slice(0, 8);
     if (!items.length) {
       const empty = document.createElement('div');
       empty.className = 'placeholder';
-      empty.textContent = 'Нет предметов. Используйте “Add Item (from stash)”.';
+      empty.textContent = 'Нет предметов. Используйте «Добавить предмет из сундука».';
       host.appendChild(empty);
       return;
     }
@@ -859,10 +859,10 @@
     items.forEach((itemId, idx) => {
       const item = db.itemsById[itemId];
       grid.appendChild(cardTileFromItem(item, {
-        meta: 'Item',
+        meta: 'Предмет',
         actions: disabled ? [] : [
           {
-            label: 'Return Item',
+            label: 'Вернуть в сундук',
             kind: 'secondary',
             onClick: () => {
               unit.equipment.splice(idx, 1);
@@ -887,7 +887,7 @@
     // Perk slots (same as on upgrades form)
     const perkTitle = document.createElement('div');
     perkTitle.className = 'section-title';
-    perkTitle.textContent = 'Perk slots';
+    perkTitle.textContent = 'Слоты перков';
     host.appendChild(perkTitle);
 
     const perkGrid = document.createElement('div');
@@ -898,9 +898,9 @@
       const threshold = PERK_XP_THRESHOLDS[i];
 
       if (!perkId) {
-        perkGrid.appendChild(emptySlotTile(`Perk #${i + 1}`, `XP ${threshold}`, disabled ? null : () => {
+        perkGrid.appendChild(emptySlotTile(`Перк ${i + 1}`, `XP ${threshold}`, disabled ? null : () => {
           openItemLibraryPicker({
-            title: `Add perk → ${unit.name} (slot ${i + 1})`,
+            title: `Добавить перк -> ${unit.name} (слот ${i + 1})`,
             filter: (it) => !!(it.cats && it.cats.Perks),
             onPick: (it) => {
               unit.perkSlots[i] = it.id;
@@ -912,11 +912,11 @@
       } else {
         const perk = db.itemsById[perkId];
         perkGrid.appendChild(cardTileFromItem(perk, {
-          meta: `Perk • XP ${threshold}`,
+          meta: `Перк • XP ${threshold}`,
           actions: disabled ? [] : [
-            { label: 'Add perk', kind: 'secondary', onClick: () => {
+            { label: 'Заменить перк', kind: 'secondary', onClick: () => {
               openItemLibraryPicker({
-                title: `Replace perk → ${unit.name} (slot ${i + 1})`,
+                title: `Заменить перк -> ${unit.name} (слот ${i + 1})`,
                 filter: (it) => !!(it.cats && it.cats.Perks),
                 onPick: (it) => {
                   unit.perkSlots[i] = it.id;
@@ -925,7 +925,7 @@
                 }
               });
             }},
-            { label: 'Del perk', kind: 'danger', onClick: () => {
+            { label: 'Удалить перк', kind: 'danger', onClick: () => {
               unit.perkSlots[i] = null;
               persistState();
               renderUnits();
@@ -940,7 +940,7 @@
     const upTitle = document.createElement('div');
     upTitle.className = 'section-title';
     upTitle.style.marginTop = '1rem';
-    upTitle.textContent = 'Upgrades (8 slots)';
+    upTitle.textContent = 'Улучшения (8 слотов)';
     host.appendChild(upTitle);
 
     const upGrid = document.createElement('div');
@@ -949,13 +949,13 @@
     for (let i = 0; i < 8; i++) {
       const upId = unit.upgradeSlots?.[i] || null;
       const threshold = UPGRADE_XP_THRESHOLDS[i];
-      const label = `Upgrade #${i + 1}`;
+      const label = `Улучшение ${i + 1}`;
       const meta = threshold ? `XP ${threshold}` : '';
 
       if (!upId) {
         upGrid.appendChild(emptySlotTile(label, meta, disabled ? null : () => {
           openItemLibraryPicker({
-            title: `Add upgrade → ${unit.name} (slot ${i + 1})`,
+            title: `Добавить улучшение -> ${unit.name} (слот ${i + 1})`,
             filter: (it) => !!(it.cats && it.cats.Upgrades),
             onPick: (it) => {
               unit.upgradeSlots[i] = it.id;
@@ -967,11 +967,11 @@
       } else {
         const up = db.itemsById[upId];
         upGrid.appendChild(cardTileFromItem(up, {
-          meta: meta ? `Upgrade • ${meta}` : 'Upgrade',
+          meta: meta ? `Улучшение • ${meta}` : 'Улучшение',
           actions: disabled ? [] : [
-            { label: 'Add', kind: 'secondary', onClick: () => {
+            { label: 'Заменить', kind: 'secondary', onClick: () => {
               openItemLibraryPicker({
-                title: `Replace upgrade → ${unit.name} (slot ${i + 1})`,
+                title: `Заменить улучшение -> ${unit.name} (слот ${i + 1})`,
                 filter: (it) => !!(it.cats && it.cats.Upgrades),
                 onPick: (it) => {
                   unit.upgradeSlots[i] = it.id;
@@ -980,7 +980,7 @@
                 }
               });
             }},
-            { label: 'Del', kind: 'danger', onClick: () => {
+            { label: 'Удалить', kind: 'danger', onClick: () => {
               unit.upgradeSlots[i] = null;
               persistState();
               renderUnits();
@@ -996,27 +996,27 @@
     const statsWrap = document.createElement('div');
     statsWrap.className = 'stats-layout';
 
-    statsWrap.appendChild(statBox('Kill board', [
-      { key: 'melee', label: 'Melee' },
-      { key: 'pistol', label: 'Pistol' },
-      { key: 'rifle', label: 'Rifle' },
-      { key: 'hw', label: 'HW' },
-      { key: 'ghouls', label: 'Ghouls' },
-      { key: 'superMutants', label: 'Super Mutants' },
-      { key: 'raiders', label: 'Raiders' },
-      { key: 'animals', label: 'Animals' },
-      { key: 'humans', label: 'Humans' },
+    statsWrap.appendChild(statBox('Таблица убийств', [
+      { key: 'melee', label: 'Ближний бой' },
+      { key: 'pistol', label: 'Пистолет' },
+      { key: 'rifle', label: 'Винтовка' },
+      { key: 'hw', label: 'Тяжелое' },
+      { key: 'ghouls', label: 'Гули' },
+      { key: 'superMutants', label: 'Супермутанты' },
+      { key: 'raiders', label: 'Рейдеры' },
+      { key: 'animals', label: 'Животные' },
+      { key: 'humans', label: 'Люди' },
     ], unit.killBoard, disabled));
 
-    statsWrap.appendChild(statBox('Expertise', [
-      { key: 'search', label: 'Search' },
-      { key: 'computer', label: 'Computer' },
-      { key: 'lockpick', label: 'Lockpick' },
-      { key: 'repair', label: 'Repair' },
-      { key: 'crafting', label: 'Crafting' },
-      { key: 'doctor', label: 'Doctor' },
-      { key: 'battleCry', label: 'Battle Cry' },
-      { key: 'trading', label: 'Trading' },
+    statsWrap.appendChild(statBox('Экспертиза', [
+      { key: 'search', label: 'Поиск' },
+      { key: 'computer', label: 'Компьютеры' },
+      { key: 'lockpick', label: 'Взлом' },
+      { key: 'repair', label: 'Ремонт' },
+      { key: 'crafting', label: 'Крафт' },
+      { key: 'doctor', label: 'Доктор' },
+      { key: 'battleCry', label: 'Боевой клич' },
+      { key: 'trading', label: 'Торговля' },
     ], unit.expertise, disabled));
 
     host.appendChild(statsWrap);
@@ -1065,7 +1065,7 @@
   function renderInventory() {
     const title = document.createElement('h2');
     title.className = 'section-title';
-    title.textContent = 'Inventory / Stash';
+    title.textContent = 'Инвентарь и сундук';
     contentEl.appendChild(title);
 
     const layout = document.createElement('div');
@@ -1077,21 +1077,21 @@
     const card = document.createElement('div');
     card.className = 'unit-card stash-card';
     const img = document.createElement('img');
-    img.alt = 'Stash';
+    img.alt = 'Сундук';
     safeImg(img, STASH_IMG, 'images/missing-unit.png');
     card.appendChild(img);
     left.appendChild(card);
 
     const hint = document.createElement('div');
     hint.className = 'placeholder';
-    hint.textContent = 'Добавляйте предметы в сундук вручную или через генератор. Для экипировки: Units → Add Item (from stash).';
+    hint.textContent = 'Добавляйте предметы в сундук вручную или через генератор. Для экипировки откройте вкладку «Персонажи» и выберите добавление предмета из сундука.';
     hint.style.marginTop = '.75rem';
     left.appendChild(hint);
 
     // Кнопка "Items generator" ниже карты сундука
     const genBtnBelow = document.createElement('button');
     genBtnBelow.className = 'btn';
-    genBtnBelow.textContent = 'Items generator';
+    genBtnBelow.textContent = 'Генератор предметов';
     genBtnBelow.style.marginTop = '.75rem';
     genBtnBelow.style.width = '100%';
     genBtnBelow.addEventListener('click', openItemsGenerator);
@@ -1102,9 +1102,9 @@
 
     const add = document.createElement('button');
     add.className = 'btn';
-    add.textContent = 'Add item to stash';
+    add.textContent = 'Добавить предмет в сундук';
     add.addEventListener('click', () => openItemLibraryPicker({
-      title: 'Add item to stash',
+      title: 'Добавить предмет в сундук',
       filter: () => true,
       onPick: (it) => {
         state.stash.items.push(it.id);
@@ -1116,16 +1116,16 @@
 
     const genBtn = document.createElement('button');
     genBtn.className = 'btn secondary';
-    genBtn.textContent = 'Items generator';
+    genBtn.textContent = 'Генератор предметов';
     genBtn.addEventListener('click', openItemsGenerator);
     actions.appendChild(genBtn);
     
     // Кнопка для добавления вещей в сундук по выбору пользователя (как для обычного персонажа)
     const addToStashManualBtn = document.createElement('button');
     addToStashManualBtn.className = 'btn';
-    addToStashManualBtn.textContent = 'Add items to stash (manual)';
+    addToStashManualBtn.textContent = 'Добавить предметы вручную';
     addToStashManualBtn.addEventListener('click', () => openItemLibraryPicker({
-      title: 'Add items to stash',
+      title: 'Добавить предметы в сундук',
       filter: () => true, // Доступ ко всем возможным картам вещей
       onPick: (it) => {
         state.stash.items.push(it.id);
@@ -1137,7 +1137,7 @@
 
     const clear = document.createElement('button');
     clear.className = 'btn danger';
-    clear.textContent = 'Clear stash';
+    clear.textContent = 'Очистить сундук';
     clear.addEventListener('click', () => {
       state.stash.items = [];
       persistState();
@@ -1152,7 +1152,7 @@
 
     const rTitle = document.createElement('div');
     rTitle.className = 'section-title';
-    rTitle.textContent = `Items in stash: ${state.stash.items.length}`;
+    rTitle.textContent = `Предметов в сундуке: ${state.stash.items.length}`;
     right.appendChild(rTitle);
 
     if (!state.stash.items.length) {
@@ -1167,10 +1167,10 @@
       state.stash.items.forEach((itemId, idx) => {
         const item = db.itemsById[itemId];
         grid.appendChild(cardTileFromItem(item, {
-          meta: 'Stash',
+          meta: 'Сундук',
           actions: [
             {
-              label: 'Del Item',
+              label: 'Удалить',
               kind: 'danger',
               onClick: () => {
                 state.stash.items.splice(idx, 1);
@@ -1215,13 +1215,13 @@
     if (onAdd) {
       const btn = document.createElement('button');
       btn.className = 'btn tiny';
-      btn.textContent = 'Add';
+      btn.textContent = 'Добавить';
       btn.addEventListener('click', onAdd);
       actions.appendChild(btn);
     } else {
       const msg = document.createElement('div');
       msg.className = 'card-tile__meta';
-      msg.textContent = 'Locked (Captive)';
+      msg.textContent = 'Недоступно (пленник)';
       actions.appendChild(msg);
     }
     body.appendChild(actions);
@@ -1248,7 +1248,7 @@
 
     const title = document.createElement('div');
     title.className = 'card-tile__title';
-    title.textContent = item?.name || 'Unknown item';
+    title.textContent = item?.name || 'Неизвестный предмет';
     body.appendChild(title);
 
     if (opts.meta) {
@@ -1358,7 +1358,7 @@
 
     const search = document.createElement('input');
     search.className = 'input';
-    search.placeholder = 'Search...';
+    search.placeholder = 'Поиск...';
     search.value = modal.state.search || '';
     search.addEventListener('input', () => {
       modal.state.search = search.value;
@@ -1444,7 +1444,7 @@
     body.className = 'card-body card__body';
     const title = document.createElement('div');
     title.className = 'title';
-    title.textContent = u.name || 'Unit';
+    title.textContent = u.name || 'Персонаж';
     body.appendChild(title);
     card.appendChild(body);
 
@@ -1476,7 +1476,7 @@
     body.className = 'card-body card__body';
     const title = document.createElement('div');
     title.className = 'title';
-    title.textContent = it.name || 'Item';
+    title.textContent = it.name || 'Предмет';
     const meta = document.createElement('div');
     meta.className = 'meta';
     meta.textContent = it.primary ? String(it.primary) : '';
@@ -1514,7 +1514,7 @@
     body.className = 'card-body card__body';
     const title = document.createElement('div');
     title.className = 'title';
-    title.textContent = it?.name || 'Item';
+    title.textContent = it?.name || 'Предмет';
     const meta = document.createElement('div');
     meta.className = 'meta';
     meta.textContent = `x${entry.count}`;
@@ -1544,7 +1544,7 @@
     modal.state.search = '';
     modal.state.group = null;
 
-    openModal('Add model');
+    openModal('Добавить персонажа');
     renderModalTools(null);
     renderModalList(null);
   }
@@ -1558,22 +1558,22 @@
     modal.state.group = null;
 
     const groups = [
-      { key: null, label: 'All' },
-      { key: 'Weapons', label: 'Weapons' },
-      { key: 'Armor', label: 'Armor' },
-      { key: 'Clothes', label: 'Clothes' },
-      { key: 'Gear', label: 'Gear' },
-      { key: 'Food', label: 'Food' },
-      { key: 'Chems', label: 'Chems' },
-      { key: 'Alcohol', label: 'Alcohol' },
-      { key: 'PowerArmor', label: 'Power Armor' },
-      { key: 'Mods', label: 'Mods' },
-      { key: 'Perks', label: 'Perks' },
-      { key: 'Upgrades', label: 'Upgrades' },
-      { key: 'Other', label: 'Other' },
+      { key: null, label: 'Все' },
+      { key: 'Weapons', label: 'Оружие' },
+      { key: 'Armor', label: 'Броня' },
+      { key: 'Clothes', label: 'Одежда' },
+      { key: 'Gear', label: 'Снаряжение' },
+      { key: 'Food', label: 'Еда' },
+      { key: 'Chems', label: 'Химия' },
+      { key: 'Alcohol', label: 'Алкоголь' },
+      { key: 'PowerArmor', label: 'Силовая броня' },
+      { key: 'Mods', label: 'Моды' },
+      { key: 'Perks', label: 'Перки' },
+      { key: 'Upgrades', label: 'Улучшения' },
+      { key: 'Other', label: 'Прочее' },
     ];
 
-    openModal(title || 'Pick item');
+    openModal(title || 'Выбор предмета');
     renderModalTools(groups);
     renderModalList(groups);
   }
@@ -1590,7 +1590,7 @@
     modal.state.search = '';
     modal.state.group = null;
 
-    openModal(title || 'Stash');
+    openModal(title || 'Сундук');
     renderModalTools(null);
     renderModalList(null);
   }
@@ -1708,9 +1708,9 @@
       if (!it) return;
       
       const tile = cardTileFromItem(it, {
-        meta: 'Generated',
+        meta: 'Сгенерировано',
         actions: [
-          { label: 'Del Item', kind: 'danger', onClick: () => {
+          { label: 'Удалить', kind: 'danger', onClick: () => {
             gen.generated.splice(actualIdx, 1);
             renderGenResults();
           }}
@@ -1800,6 +1800,143 @@
     if (backdrop) {
       backdrop.addEventListener('click', () => closeItemsGenerator({ autoAdd: false }));
     }
+  }
+
+  function openUnitPicker() {
+    modal.mode = 'units';
+    modal.items = db.units.slice();
+    modal.onPick = (u) => {
+      const unit = makeDefaultUnit(u.id);
+      state.units.push(unit);
+      state.currentUnitIndex = state.units.length - 1;
+      persistState();
+      renderUnits();
+    };
+    modal.filterFn = null;
+    modal.state.search = '';
+    modal.state.group = null;
+
+    openModal('Добавить персонажа');
+    renderModalTools(null);
+    renderModalList(null);
+  }
+
+  function openItemLibraryPicker({ title, filter, onPick }) {
+    modal.mode = 'items';
+    modal.items = db.items.slice();
+    modal.onPick = onPick;
+    modal.filterFn = filter || null;
+    modal.state.search = '';
+    modal.state.group = null;
+
+    const groups = [
+      { key: null, label: 'Все' },
+      { key: 'Weapons', label: 'Оружие' },
+      { key: 'Armor', label: 'Броня' },
+      { key: 'Clothes', label: 'Одежда' },
+      { key: 'Gear', label: 'Снаряжение' },
+      { key: 'Food', label: 'Еда' },
+      { key: 'Chems', label: 'Химия' },
+      { key: 'Alcohol', label: 'Алкоголь' },
+      { key: 'PowerArmor', label: 'Силовая броня' },
+      { key: 'Mods', label: 'Моды' },
+      { key: 'Perks', label: 'Перки' },
+      { key: 'Upgrades', label: 'Улучшения' },
+      { key: 'Other', label: 'Прочее' },
+    ];
+
+    openModal(title || 'Выбор предмета');
+    renderModalTools(groups);
+    renderModalList(groups);
+  }
+
+  function openStashPicker({ title, onPick }) {
+    const counts = new Map();
+    state.stash.items.forEach(itemId => counts.set(itemId, (counts.get(itemId) || 0) + 1));
+    const entries = Array.from(counts.entries()).map(([itemId, count]) => ({ itemId, count }));
+
+    modal.mode = 'stash';
+    modal.items = entries;
+    modal.onPick = onPick;
+    modal.filterFn = null;
+    modal.state.search = '';
+    modal.state.group = null;
+
+    openModal(title || 'Сундук');
+    renderModalTools(null);
+    renderModalList(null);
+  }
+
+  function openItemsGenerator() {
+    if (!gen.root) {
+      initGenElements();
+    }
+    if (!gen.root) {
+      console.error('Не удалось найти элемент генератора');
+      return;
+    }
+    gen.root.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    renderGen();
+  }
+
+  function renderGenResults() {
+    gen.results.innerHTML = '';
+    if (!gen.generated.length) {
+      const empty = document.createElement('div');
+      empty.className = 'placeholder';
+      empty.textContent = 'Пока ничего не сгенерировано.';
+      gen.results.appendChild(empty);
+      return;
+    }
+
+    const displayItems = gen.generated.slice(-8);
+
+    displayItems.forEach((itemId, idx) => {
+      const actualIdx = gen.generated.length - displayItems.length + idx;
+      const it = db.itemsById[itemId];
+      if (!it) return;
+
+      const tile = cardTileFromItem(it, {
+        meta: 'Сгенерировано',
+        actions: [
+          { label: 'Удалить', kind: 'danger', onClick: () => {
+            gen.generated.splice(actualIdx, 1);
+            renderGenResults();
+          }}
+        ]
+      });
+      gen.results.appendChild(tile);
+    });
+  }
+
+  function generateOneItem() {
+    const weights = readGenWeights();
+    const entries = [];
+
+    for (const [type, rarity] of gen.selection.entries()) {
+      const w = weights[rarity];
+      if (!w) continue;
+      const candidates = itemCandidatesForType(type);
+      if (!candidates.length) continue;
+      entries.push({ w, value: candidates });
+    }
+
+    if (!entries.length) {
+      alert('Выберите хотя бы один тип предметов и убедитесь, что его вес больше нуля.');
+      return;
+    }
+
+    const candidates = weightedChoice(entries);
+    const item = randomChoice(candidates);
+    if (!item) return;
+
+    gen.generated.push(item.id);
+    if (gen.generated.length > 8) {
+      gen.generated = gen.generated.slice(-8);
+    }
+
+    renderGenResults();
   }
 
   // -------------------- bindings --------------------

@@ -1,4 +1,4 @@
-/* Standalone Items Generator (no stash) */
+/* Standalone items generator without stash integration. */
 
 (function () {
   'use strict';
@@ -40,7 +40,10 @@
   async function loadDb() {
     db.itemsMap = await fetch('images/items_map.json').then(r => r.json()).catch(() => ({}));
     const items = await fetch('db/items.json').then(r => r.json());
-    db.items = (items || []).map(it => ({
+    if (!Array.isArray(items)) {
+      throw new Error('db/items.json has invalid format: expected array');
+    }
+    db.items = items.map(it => ({
       ...it,
       img: db.itemsMap[it.id] || `images/items/${it.id}.png`,
       name: (it.name || '').trim(),
@@ -106,7 +109,7 @@
   }
 
   const genState = {
-    selection: new Map(), // type -> rarity (red|black|green)
+    selection: new Map(),
     generated: [],
   };
 
@@ -172,12 +175,12 @@
 
     const title = document.createElement('div');
     title.className = 'card-tile__title';
-    title.textContent = it?.name || 'Unknown item';
+    title.textContent = it?.name || 'Неизвестный предмет';
     body.appendChild(title);
 
     const meta = document.createElement('div');
     meta.className = 'card-tile__meta';
-    meta.textContent = 'Generated';
+    meta.textContent = 'Сгенерировано';
     body.appendChild(meta);
 
     const actions = document.createElement('div');
@@ -185,7 +188,7 @@
 
     const del = document.createElement('button');
     del.className = 'btn tiny danger';
-    del.textContent = 'Del Item';
+    del.textContent = 'Удалить';
     del.addEventListener('click', () => {
       genState.generated.splice(idx, 1);
       renderResults();
@@ -210,7 +213,7 @@
       entries.push({ w, value: candidates });
     }
     if (!entries.length) {
-      alert('Выберите хотя бы один тип предметов (иконки) и убедитесь, что вес > 0.');
+      alert('Выберите хотя бы один тип предметов и убедитесь, что его вес больше нуля.');
       return;
     }
     const candidates = weightedChoice(entries);
@@ -221,7 +224,6 @@
   }
 
   function initUi() {
-    // bind icons
     $$('.ig-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const type = btn.dataset.type;

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="title desc">
+  <title id="title">Stash placeholder</title>
+  <desc id="desc">Stylized storage crate illustration for inventory and stash.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2b1d12" />
+      <stop offset="100%" stop-color="#120d08" />
+    </linearGradient>
+    <linearGradient id="crate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8e6740" />
+      <stop offset="100%" stop-color="#5c3f24" />
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#b7a27b" />
+      <stop offset="100%" stop-color="#7d6b4b" />
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="640" rx="36" fill="url(#bg)" />
+  <circle cx="520" cy="120" r="70" fill="#d18a2d" opacity="0.18" />
+  <circle cx="120" cy="520" r="90" fill="#b44f1c" opacity="0.14" />
+
+  <g transform="translate(90 140)">
+    <rect x="40" y="80" width="380" height="250" rx="18" fill="url(#crate)" stroke="#2a1b10" stroke-width="12" />
+    <rect x="20" y="40" width="420" height="100" rx="18" fill="#704c2c" stroke="#2a1b10" stroke-width="12" />
+    <rect x="200" y="180" width="60" height="90" rx="10" fill="url(#metal)" stroke="#4b3a22" stroke-width="8" />
+    <rect x="85" y="95" width="24" height="220" fill="#3a2616" opacity="0.6" />
+    <rect x="180" y="95" width="24" height="220" fill="#3a2616" opacity="0.6" />
+    <rect x="276" y="95" width="24" height="220" fill="#3a2616" opacity="0.6" />
+    <rect x="371" y="95" width="24" height="220" fill="#3a2616" opacity="0.6" />
+    <rect x="100" y="25" width="260" height="28" rx="12" fill="url(#metal)" />
+    <circle cx="230" cy="226" r="18" fill="#41301b" />
+  </g>
+
+  <g transform="translate(120 420)">
+    <rect x="0" y="0" width="400" height="88" rx="22" fill="#16110c" opacity="0.86" />
+    <rect x="18" y="18" width="364" height="52" rx="14" fill="#201812" stroke="#5d462d" stroke-width="4" />
+    <path d="M52 44h62l18-14h56l18 14h144" fill="none" stroke="#d4b07a" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>
