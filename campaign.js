@@ -91,12 +91,19 @@
       fetch('db/items.json').then(r => r.json()),
     ]);
 
-    db.units = (unitsRaw || []).map(u => ({
+    if (!Array.isArray(unitsRaw)) {
+      throw new Error('db/units.json has invalid format: expected array');
+    }
+    if (!Array.isArray(itemsRaw)) {
+      throw new Error('db/items.json has invalid format: expected array');
+    }
+
+    db.units = unitsRaw.map(u => ({
       ...u,
       img: db.unitsMap[u.id] || `images/units/${u.id}.png`,
       name: (u.name || '').trim(),
     }));
-    db.items = (itemsRaw || []).map(it => ({
+    db.items = itemsRaw.map(it => ({
       ...it,
       img: db.itemsMap[it.id] || `images/items/${it.id}.png`,
       name: (it.name || '').trim(),
