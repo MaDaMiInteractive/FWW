@@ -35,27 +35,27 @@
         <div class="field">
           <label>Разведка</label>
           <div class="numstep">
-            <button class="btn small" data-step="scout" data-delta="-1">-</button>
+            <button class="btn small" data-step="scout" data-delta="-1" type="button">-</button>
             <input id="metaScout" class="input number smallnum" type="number" />
-            <button class="btn small" data-step="scout" data-delta="1">+</button>
+            <button class="btn small" data-step="scout" data-delta="1" type="button">+</button>
           </div>
         </div>
 
         <div class="field">
           <label>AP</label>
           <div class="numstep">
-            <button class="btn small" data-step="ap" data-delta="-1">-</button>
+            <button class="btn small" data-step="ap" data-delta="-1" type="button">-</button>
             <input id="metaAp" class="input number smallnum" type="number" />
-            <button class="btn small" data-step="ap" data-delta="1">+</button>
+            <button class="btn small" data-step="ap" data-delta="1" type="button">+</button>
           </div>
         </div>
 
         <div class="field">
           <label>XP</label>
           <div class="numstep">
-            <button class="btn small" data-step="xp" data-delta="-1">-</button>
+            <button class="btn small" data-step="xp" data-delta="-1" type="button">-</button>
             <input id="metaXp" class="input number smallnum" type="number" />
-            <button class="btn small" data-step="xp" data-delta="1">+</button>
+            <button class="btn small" data-step="xp" data-delta="1" type="button">+</button>
           </div>
         </div>
 
@@ -82,19 +82,19 @@
           <input id="metaNote" class="input" placeholder="Необязательно" />
         </div>
 
-        <button id="openGeneratorTopBtn" class="btn secondary campaign-genbtn">Генератор предметов</button>
+        <button id="openGeneratorTopBtn" class="btn secondary campaign-genbtn" type="button">Генератор предметов</button>
       </div>
     </div>
 
     <nav class="campaign-tabs" aria-label="Вкладки кампании">
-      <button class="tab" data-tab="Locations">Локации</button>
-      <button class="tab" data-tab="Units">Персонажи</button>
-      <button class="tab" data-tab="Inventory">Инвентарь</button>
-      <button class="tab" data-tab="Market">Рынок</button>
-      <button class="tab" data-tab="Craft">Крафт</button>
-      <button class="tab" data-tab="Caravans">Караваны</button>
-      <button class="tab" data-tab="Captives">Пленники</button>
-      <button class="tab" data-tab="TurnLog">Журнал хода</button>
+      <button class="tab" data-tab="Locations" type="button">Локации</button>
+      <button class="tab" data-tab="Units" type="button">Персонажи</button>
+      <button class="tab" data-tab="Inventory" type="button">Инвентарь</button>
+      <button class="tab" data-tab="Market" type="button">Рынок</button>
+      <button class="tab" data-tab="Craft" type="button">Крафт</button>
+      <button class="tab" data-tab="Caravans" type="button">Караваны</button>
+      <button class="tab" data-tab="Captives" type="button">Пленники</button>
+      <button class="tab" data-tab="TurnLog" type="button">Журнал хода</button>
     </nav>
   </header>
 
@@ -109,12 +109,12 @@
     </div>
 
     <div class="campaign-footer__right">
-      <button id="newCrewBtn" class="btn danger">Новая банда</button>
-      <button id="savePdfBtn" class="btn">Сохранить в PDF</button>
-      <button id="saveTxtBtn" class="btn">Сохранить в TXT</button>
+      <button id="newCrewBtn" class="btn danger" type="button">Новая банда</button>
+      <button id="savePdfBtn" class="btn" type="button">Сохранить в PDF</button>
+      <button id="saveTxtBtn" class="btn" type="button">Сохранить в TXT</button>
 
       <input id="loadInput" type="file" accept=".json,.txt,application/json,text/plain" style="display:none" />
-      <button id="loadCrewBtn" class="btn">Загрузить банду</button>
+      <button id="loadCrewBtn" class="btn" type="button">Загрузить банду</button>
     </div>
   </footer>
 
@@ -123,7 +123,7 @@
     <div class="panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="panel-header">
         <div id="modalTitle" class="title"></div>
-        <button id="modalClose" class="icon">x</button>
+        <button id="modalClose" class="icon" type="button">x</button>
       </div>
       <div class="panel-content">
         <div id="modalTools" class="filters"></div>
@@ -137,7 +137,7 @@
     <div class="panel panel--generator" role="dialog" aria-modal="true" aria-labelledby="itemsGenTitle">
       <div class="panel-header">
         <div id="itemsGenTitle" class="title">Генератор предметов</div>
-        <button id="itemsGenClose" class="icon">x</button>
+        <button id="itemsGenClose" class="icon" type="button">Закрыть</button>
       </div>
 
       <div class="panel-content generator">
@@ -169,48 +169,107 @@
 
             <div class="ig-rows">
               <div class="ig-row ig-row--red" data-rarity="red">
-                <button class="ig-btn" data-type="Weapons" title="Оружие">&#128299;</button>
-                <button class="ig-btn" data-type="Armor" title="Броня">&#128737;</button>
-                <button class="ig-btn" data-type="Clothes" title="Одежда">&#128085;</button>
-                <button class="ig-btn" data-type="Alcohol" title="Алкоголь">&#127864;</button>
-                <button class="ig-btn" data-type="Gear" title="Снаряжение">&#128295;</button>
-                <button class="ig-btn" data-type="Junk" title="Хлам">&#128722;</button>
-                <button class="ig-btn" data-type="Mods" title="Моды">&#9881;</button>
-                <button class="ig-btn" data-type="Food" title="Еда">&#127858;</button>
-                <button class="ig-btn" data-type="Chems" title="Химия">&#128138;</button>
-                <button class="ig-btn" data-type="PowerArmor" title="Силовая броня">&#129520;</button>
+                <button class="ig-btn" data-type="Weapons" title="Оружие" aria-label="Оружие" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-weapon"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Armor" title="Броня" aria-label="Броня" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-armor"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Clothes" title="Одежда" aria-label="Одежда" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-clothes"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Alcohol" title="Алкоголь" aria-label="Алкоголь" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-alcohol"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Gear" title="Снаряжение" aria-label="Снаряжение" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-gear"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Junk" title="Хлам" aria-label="Хлам" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-junk"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Mods" title="Моды" aria-label="Моды" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-mods"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Food" title="Еда" aria-label="Еда" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-food"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Chems" title="Химия" aria-label="Химия" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-chems"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="PowerArmor" title="Силовая броня" aria-label="Силовая броня" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-power-armor"></use></svg>
+                </button>
               </div>
 
               <div class="ig-row ig-row--black" data-rarity="black">
-                <button class="ig-btn" data-type="Weapons" title="Оружие">&#128299;</button>
-                <button class="ig-btn" data-type="Armor" title="Броня">&#128737;</button>
-                <button class="ig-btn" data-type="Clothes" title="Одежда">&#128085;</button>
-                <button class="ig-btn" data-type="Alcohol" title="Алкоголь">&#127864;</button>
-                <button class="ig-btn" data-type="Gear" title="Снаряжение">&#128295;</button>
-                <button class="ig-btn" data-type="Junk" title="Хлам">&#128722;</button>
-                <button class="ig-btn" data-type="Mods" title="Моды">&#9881;</button>
-                <button class="ig-btn" data-type="Food" title="Еда">&#127858;</button>
-                <button class="ig-btn" data-type="Chems" title="Химия">&#128138;</button>
-                <button class="ig-btn" data-type="PowerArmor" title="Силовая броня">&#129520;</button>
+                <button class="ig-btn" data-type="Weapons" title="Оружие" aria-label="Оружие" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-weapon"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Armor" title="Броня" aria-label="Броня" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-armor"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Clothes" title="Одежда" aria-label="Одежда" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-clothes"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Alcohol" title="Алкоголь" aria-label="Алкоголь" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-alcohol"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Gear" title="Снаряжение" aria-label="Снаряжение" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-gear"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Junk" title="Хлам" aria-label="Хлам" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-junk"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Mods" title="Моды" aria-label="Моды" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-mods"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Food" title="Еда" aria-label="Еда" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-food"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Chems" title="Химия" aria-label="Химия" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-chems"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="PowerArmor" title="Силовая броня" aria-label="Силовая броня" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-power-armor"></use></svg>
+                </button>
               </div>
 
               <div class="ig-row ig-row--green" data-rarity="green">
-                <button class="ig-btn" data-type="Weapons" title="Оружие">&#128299;</button>
-                <button class="ig-btn" data-type="Armor" title="Броня">&#128737;</button>
-                <button class="ig-btn" data-type="Clothes" title="Одежда">&#128085;</button>
-                <button class="ig-btn" data-type="Alcohol" title="Алкоголь">&#127864;</button>
-                <button class="ig-btn" data-type="Gear" title="Снаряжение">&#128295;</button>
-                <button class="ig-btn" data-type="Junk" title="Хлам">&#128722;</button>
-                <button class="ig-btn" data-type="Mods" title="Моды">&#9881;</button>
-                <button class="ig-btn" data-type="Food" title="Еда">&#127858;</button>
-                <button class="ig-btn" data-type="Chems" title="Химия">&#128138;</button>
-                <button class="ig-btn" data-type="PowerArmor" title="Силовая броня">&#129520;</button>
+                <button class="ig-btn" data-type="Weapons" title="Оружие" aria-label="Оружие" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-weapon"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Armor" title="Броня" aria-label="Броня" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-armor"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Clothes" title="Одежда" aria-label="Одежда" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-clothes"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Alcohol" title="Алкоголь" aria-label="Алкоголь" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-alcohol"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Gear" title="Снаряжение" aria-label="Снаряжение" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-gear"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Junk" title="Хлам" aria-label="Хлам" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-junk"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Mods" title="Моды" aria-label="Моды" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-mods"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Food" title="Еда" aria-label="Еда" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-food"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="Chems" title="Химия" aria-label="Химия" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-chems"></use></svg>
+                </button>
+                <button class="ig-btn" data-type="PowerArmor" title="Силовая броня" aria-label="Силовая броня" type="button">
+                  <svg class="ig-btn__icon" viewBox="0 0 64 64" aria-hidden="true"><use href="images/item-type-icons.svg#icon-power-armor"></use></svg>
+                </button>
               </div>
             </div>
 
             <div class="generator__actions">
-              <button id="genOneBtn" class="btn">Сгенерировать предмет</button>
-              <button id="addToStashBtn" class="btn secondary">Добавить в сундук</button>
+              <button id="genOneBtn" class="btn" type="button">Сгенерировать предмет</button>
             </div>
           </div>
         </div>
@@ -218,6 +277,9 @@
         <div class="generator__results">
           <div class="generator__results-title">Сгенерированные карты</div>
           <div id="genResults" class="gen-grid" aria-label="Сетка сгенерированных предметов"></div>
+          <div class="generator__results-footer">
+            <button id="addToStashBtn" class="btn secondary" type="button">Добавить в сундук</button>
+          </div>
         </div>
       </div>
     </div>

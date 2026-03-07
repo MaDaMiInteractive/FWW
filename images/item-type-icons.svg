@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-weapon" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M6 48l8-8 8 2 20-20 7 1 7-7 4 4-7 7 1 7-20 20 2 8-8 8-3-9-7-7z"/>
+    <rect fill="currentColor" x="42" y="11" width="11" height="4" rx="1" transform="rotate(-45 42 11)"/>
+  </symbol>
+  <symbol id="icon-armor" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M20 10h24l7 8-3 29-16 9-16-9-3-29 7-8zm3 7l-3 3 2 22 10 6 10-6 2-22-3-3h-6l-3 4-3-4h-6z"/>
+  </symbol>
+  <symbol id="icon-clothes" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M30 7a6 6 0 1112 0c0 2-1 3-2 4l-1 1 8 8-5 5-3-3v25H17V22l-3 3-5-5 9-8-1-1c-1-1-2-2-2-4a6 6 0 1112 0h3z"/>
+  </symbol>
+  <symbol id="icon-alcohol" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M16 12h32l-10 12v8l10 12a10 10 0 01-8 16H24a10 10 0 01-8-16l10-12v-8L16 12zm10 6l6 7 6-7H26zm5 16l-8 10a4 4 0 003 6h12a4 4 0 003-6L33 34v10h8v4H23v-4h8V34z"/>
+  </symbol>
+  <symbol id="icon-gear" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M52 14l-9 4-3-3 4-9-4-4-9 4 2 7-9 9-7-2-4 9 4 4 9-4 3 3-4 9 4 4 9-4-2-7 9-9 7 2 4-9-4-4-9 4-3-3 4-9-4-4zM21 44l-4-4 17-17 4 4-17 17z"/>
+  </symbol>
+  <symbol id="icon-junk" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M18 16h6l6 24h18l6-17h4l-7 21H28l-1 3h24v5H24a5 5 0 01-5-7l2-5-6-24H8v-5h10zm10 37a5 5 0 110 10 5 5 0 010-10zm20 0a5 5 0 110 10 5 5 0 010-10z"/>
+  </symbol>
+  <symbol id="icon-mods" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M36 6l3 7 7 1 5 6-3 7 3 7-5 6-7 1-3 7h-8l-3-7-7-1-5-6 3-7-3-7 5-6 7-1 3-7h8zm-4 13a13 13 0 100 26 13 13 0 000-26zm0 7a6 6 0 110 12 6 6 0 010-12z"/>
+  </symbol>
+  <symbol id="icon-food" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M18 40h28c6 0 10 4 10 10H8c0-6 4-10 10-10zm5-3c0-8 4-14 9-19l3 2c-5 5-8 10-8 17h-4zm10-4c0-8 4-14 9-19l3 2c-5 5-8 10-8 17h-4zm10 4c0-8 4-14 9-19l3 2c-5 5-8 10-8 17h-4z"/>
+  </symbol>
+  <symbol id="icon-chems" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M23 9a8 8 0 0111 0l19 19a8 8 0 010 11L34 58a8 8 0 01-11 0L4 39a8 8 0 010-11L23 9zm4 6L10 32a3 3 0 000 4l18 18a3 3 0 004 0l17-17a3 3 0 000-4L31 15a3 3 0 00-4 0zm8 8l5 5-16 16-5-5 16-16z"/>
+  </symbol>
+  <symbol id="icon-power-armor" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M20 8h24l8 9v14l-5 6v13l-8 6H25l-8-6V37l-5-6V17l8-9zm4 8l-4 4v9l4 4h4l4-5 4 5h4l4-4v-9l-4-4H24zm2 24v8l6 4 6-4v-8l-2-2H28l-2 2z"/>
+  </symbol>
+</svg>

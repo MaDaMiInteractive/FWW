@@ -139,6 +139,7 @@
     return {
       uid: `u_${Math.random().toString(36).slice(2, 10)}`,
       unitId,
+      isStash: !!base?.is_stash,
       img: base?.img || 'images/missing-unit.png',
       name: base?.name || 'Unit',
       rank: '',
@@ -225,6 +226,11 @@
 
     // ensure arrays sizes
     state.units.forEach(u => {
+      u.isStash = Boolean(u.isStash || db.unitsById[u.unitId]?.is_stash);
+      if (u.isStash && (!u.name || u.name === 'Stash' || u.name === 'Inventory')) {
+        u.name = db.unitsById[u.unitId]?.name || 'Сундук / инвентарь';
+      }
+
       if (!Array.isArray(u.injuries)) u.injuries = ['', '', ''];
       while (u.injuries.length < 3) u.injuries.push('');
       u.injuries = u.injuries.slice(0, 3);
@@ -457,22 +463,12 @@
   }
 
   function unitTotalCost(unit) {
-    // Стоимость сундука/инвентаря не учитывается в общей сумме очков армии
-    // Проверяем по ID или имени персонажа
-    const unitId = (unit.unitId || '').toLowerCase();
-    const unitName = (unit.name || '').toLowerCase();
-    const isStash = unitId.includes('stash') || unitId.includes('inventory') || 
-                    unitId.includes('сундук') || unitId.includes('инвентарь') ||
-                    unitName.includes('stash') || unitName.includes('inventory') ||
-                    unitName.includes('сундук') || unitName.includes('инвентарь');
-    
-    if (isStash) {
+    const base = db.unitsById[unit.unitId];
+    if (unit.isStash || base?.is_stash) {
       return 0;
     }
-    
-    const base = db.unitsById[unit.unitId];
-    const unitCost = Number(base?.cost || 0) || 0;
 
+    const unitCost = Number(base?.cost || 0) || 0;
     const sumIds = (ids) => (ids || []).reduce((s, id) => s + (Number(db.itemsById[id]?.cost || 0) || 0), 0);
     const equipCost = sumIds(unit.equipment || []);
     const perkCost = sumIds((unit.perkSlots || []).filter(Boolean));
@@ -1659,9 +1655,7 @@
     renderGen();
   }
 
-  function closeItemsGenerator({ autoAdd = false } = {}) {
-    // По умолчанию карты НЕ добавляются автоматически при закрытии
-    // Пользователь должен явно нажать "Add to stash" или "удалить карту"
+  function closeItemsGenerator({ autoAdd = true } = {}) {
     if (autoAdd && gen.generated.length) {
       state.stash.items.push(...gen.generated);
       gen.generated = [];
@@ -1671,7 +1665,7 @@
       gen.root.classList.add('hidden');
     }
     document.body.classList.remove('modal-open');
-    render(); // refresh counters
+    render();
   }
 
   function setGenSelection(type, rarity) {
@@ -1794,11 +1788,11 @@
     initGenElements();
     
     if (gen.closeBtn) {
-      gen.closeBtn.addEventListener('click', () => closeItemsGenerator({ autoAdd: false }));
+      gen.closeBtn.addEventListener('click', () => closeItemsGenerator());
     }
     const backdrop = gen.root ? $('.backdrop', gen.root) : null;
     if (backdrop) {
-      backdrop.addEventListener('click', () => closeItemsGenerator({ autoAdd: false }));
+      backdrop.addEventListener('click', () => closeItemsGenerator());
     }
   }
 
@@ -1850,23 +1844,6 @@
     renderModalList(groups);
   }
 
-  function openStashPicker({ title, onPick }) {
-    const counts = new Map();
-    state.stash.items.forEach(itemId => counts.set(itemId, (counts.get(itemId) || 0) + 1));
-    const entries = Array.from(counts.entries()).map(([itemId, count]) => ({ itemId, count }));
-
-    modal.mode = 'stash';
-    modal.items = entries;
-    modal.onPick = onPick;
-    modal.filterFn = null;
-    modal.state.search = '';
-    modal.state.group = null;
-
-    openModal(title || 'Сундук');
-    renderModalTools(null);
-    renderModalList(null);
-  }
-
   function openItemsGenerator() {
     if (!gen.root) {
       initGenElements();
@@ -1878,65 +1855,6 @@
     gen.root.classList.remove('hidden');
     document.body.classList.add('modal-open');
     renderGen();
-  }
-
-  function renderGenResults() {
-    gen.results.innerHTML = '';
-    if (!gen.generated.length) {
-      const empty = document.createElement('div');
-      empty.className = 'placeholder';
-      empty.textContent = 'Пока ничего не сгенерировано.';
-      gen.results.appendChild(empty);
-      return;
-    }
-
-    const displayItems = gen.generated.slice(-8);
-
-    displayItems.forEach((itemId, idx) => {
-      const actualIdx = gen.generated.length - displayItems.length + idx;
-      const it = db.itemsById[itemId];
-      if (!it) return;
-
-      const tile = cardTileFromItem(it, {
-        meta: 'Сгенерировано',
-        actions: [
-          { label: 'Удалить', kind: 'danger', onClick: () => {
-            gen.generated.splice(actualIdx, 1);
-            renderGenResults();
-          }}
-        ]
-      });
-      gen.results.appendChild(tile);
-    });
-  }
-
-  function generateOneItem() {
-    const weights = readGenWeights();
-    const entries = [];
-
-    for (const [type, rarity] of gen.selection.entries()) {
-      const w = weights[rarity];
-      if (!w) continue;
-      const candidates = itemCandidatesForType(type);
-      if (!candidates.length) continue;
-      entries.push({ w, value: candidates });
-    }
-
-    if (!entries.length) {
-      alert('Выберите хотя бы один тип предметов и убедитесь, что его вес больше нуля.');
-      return;
-    }
-
-    const candidates = weightedChoice(entries);
-    const item = randomChoice(candidates);
-    if (!item) return;
-
-    gen.generated.push(item.id);
-    if (gen.generated.length > 8) {
-      gen.generated = gen.generated.slice(-8);
-    }
-
-    renderGenResults();
   }
 
   // -------------------- bindings --------------------

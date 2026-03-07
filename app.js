@@ -943,7 +943,9 @@ function addUnitPick() {
 }
 function getUnitsForPicker() {
   const faction = state.roster.faction
-  let list = faction ? db.units.filter(x => (x.factions || []).includes(faction)) : db.units
+  let list = faction
+    ? db.units.filter(x => !x.is_stash && (x.factions || []).includes(faction))
+    : db.units.filter(x => !x.is_stash)
   if (state.unitFilter === 'Уникальные') list = list.filter(x => x.unique)
   return list
 }

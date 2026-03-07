@@ -8595,7 +8595,7 @@
   },
   {
     "id": "stash",
-    "name": "Stash",
+    "name": "Сундук / инвентарь",
     "factions": [
       "BoS",
       "Caesar's Legion",
@@ -8625,7 +8625,9 @@
       "Rifle": true,
       "Heavy Weapon": true,
       "Grenade": true,
-      "Power Armor": true
+      "Mines": true,
+      "Power Armor": true,
+      "Upgrades": true
     },
     "access": {
       "Upgrades": true,
@@ -8641,6 +8643,7 @@
       "Standart Item": true,
       "Faction Items": true
     },
+    "is_stash": true,
     "unique": false,
     "cost": 0,
     "equipped": []

@@ -490,7 +490,6 @@ body.campaign-page {
   color: var(--text);
   cursor: pointer;
   padding: .55rem .2rem;
-  font-size: 20px;
   transition: .15s;
   display: flex;
   align-items: center;
@@ -498,7 +497,18 @@ body.campaign-page {
   min-height: 48px;
 }
 
-/* Иконки будут добавлены позже, пока используем эмодзи */
+/* Иконки типов предметов для генератора */
+
+.ig-row--red .ig-btn { color: #ff4f4f; }
+.ig-row--black .ig-btn { color: #f3f3f3; }
+.ig-row--green .ig-btn { color: #3bd16f; }
+
+.ig-btn__icon {
+  width: 34px;
+  height: 34px;
+  display: block;
+  pointer-events: none;
+}
 
 .ig-btn:hover {
   border-color: #3a86ff55;
@@ -529,6 +539,12 @@ body.campaign-page {
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: .85rem .9rem .95rem;
+}
+
+.generator__results-footer {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1rem;
 }
 
 .gen-grid {
@@ -670,4 +686,3 @@ body.campaign-page {
 .stat-row span {
   color: var(--muted);
 }
-
