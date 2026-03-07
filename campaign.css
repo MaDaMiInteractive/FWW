@@ -510,67 +510,47 @@ body.campaign-page {
 
 .ig-btn::before {
   content: '';
-  width: 50px;
-  height: 46px;
+  width: 58px;
+  height: 52px;
   display: block;
   flex: 0 0 auto;
-  background-color: currentColor;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  mask-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
-.ig-btn[data-type="Weapons"]::before {
-  -webkit-mask-image: url('images/item-icons/weapon.svg');
-  mask-image: url('images/item-icons/weapon.svg');
-}
+.ig-row--green .ig-btn[data-type="Weapons"]::before { background-image: url('images/item-icons/original/green/weapon.png'); }
+.ig-row--green .ig-btn[data-type="Armor"]::before { background-image: url('images/item-icons/original/green/armor.png'); }
+.ig-row--green .ig-btn[data-type="Clothes"]::before { background-image: url('images/item-icons/original/green/clothes.png'); }
+.ig-row--green .ig-btn[data-type="Alcohol"]::before { background-image: url('images/item-icons/original/green/alcohol.png'); }
+.ig-row--green .ig-btn[data-type="Gear"]::before { background-image: url('images/item-icons/original/green/gear.png'); }
+.ig-row--green .ig-btn[data-type="Junk"]::before { background-image: url('images/item-icons/original/green/junk.png'); }
+.ig-row--green .ig-btn[data-type="Mods"]::before { background-image: url('images/item-icons/original/green/mods.png'); }
+.ig-row--green .ig-btn[data-type="Food"]::before { background-image: url('images/item-icons/original/green/food.png'); }
+.ig-row--green .ig-btn[data-type="Chems"]::before { background-image: url('images/item-icons/original/green/chems.png'); }
+.ig-row--green .ig-btn[data-type="PowerArmor"]::before { background-image: url('images/item-icons/original/green/power-armor.png'); }
 
-.ig-btn[data-type="Armor"]::before {
-  -webkit-mask-image: url('images/item-icons/armor.svg');
-  mask-image: url('images/item-icons/armor.svg');
-}
+.ig-row--black .ig-btn[data-type="Weapons"]::before { background-image: url('images/item-icons/original/black/weapon.png'); }
+.ig-row--black .ig-btn[data-type="Armor"]::before { background-image: url('images/item-icons/original/black/armor.png'); }
+.ig-row--black .ig-btn[data-type="Clothes"]::before { background-image: url('images/item-icons/original/black/clothes.png'); }
+.ig-row--black .ig-btn[data-type="Alcohol"]::before { background-image: url('images/item-icons/original/black/alcohol.png'); }
+.ig-row--black .ig-btn[data-type="Gear"]::before { background-image: url('images/item-icons/original/black/gear.png'); }
+.ig-row--black .ig-btn[data-type="Junk"]::before { background-image: url('images/item-icons/original/black/junk.png'); }
+.ig-row--black .ig-btn[data-type="Mods"]::before { background-image: url('images/item-icons/original/black/mods.png'); }
+.ig-row--black .ig-btn[data-type="Food"]::before { background-image: url('images/item-icons/original/black/food.png'); }
+.ig-row--black .ig-btn[data-type="Chems"]::before { background-image: url('images/item-icons/original/black/chems.png'); }
+.ig-row--black .ig-btn[data-type="PowerArmor"]::before { background-image: url('images/item-icons/original/black/power-armor.png'); }
 
-.ig-btn[data-type="Clothes"]::before {
-  -webkit-mask-image: url('images/item-icons/clothes.svg');
-  mask-image: url('images/item-icons/clothes.svg');
-}
-
-.ig-btn[data-type="Alcohol"]::before {
-  -webkit-mask-image: url('images/item-icons/alcohol.svg');
-  mask-image: url('images/item-icons/alcohol.svg');
-}
-
-.ig-btn[data-type="Gear"]::before {
-  -webkit-mask-image: url('images/item-icons/gear.svg');
-  mask-image: url('images/item-icons/gear.svg');
-}
-
-.ig-btn[data-type="Junk"]::before {
-  -webkit-mask-image: url('images/item-icons/junk.svg');
-  mask-image: url('images/item-icons/junk.svg');
-}
-
-.ig-btn[data-type="Mods"]::before {
-  -webkit-mask-image: url('images/item-icons/mods.svg');
-  mask-image: url('images/item-icons/mods.svg');
-}
-
-.ig-btn[data-type="Food"]::before {
-  -webkit-mask-image: url('images/item-icons/food.svg');
-  mask-image: url('images/item-icons/food.svg');
-}
-
-.ig-btn[data-type="Chems"]::before {
-  -webkit-mask-image: url('images/item-icons/chems.svg');
-  mask-image: url('images/item-icons/chems.svg');
-}
-
-.ig-btn[data-type="PowerArmor"]::before {
-  -webkit-mask-image: url('images/item-icons/power-armor.svg');
-  mask-image: url('images/item-icons/power-armor.svg');
+.ig-row--red .ig-btn[data-type="Weapons"]::before { background-image: url('images/item-icons/original/red/weapon.png'); }
+.ig-row--red .ig-btn[data-type="Armor"]::before { background-image: url('images/item-icons/original/red/armor.png'); }
+.ig-row--red .ig-btn[data-type="Clothes"]::before { background-image: url('images/item-icons/original/red/clothes.png'); }
+.ig-row--red .ig-btn[data-type="Alcohol"]::before { background-image: url('images/item-icons/original/red/alcohol.png'); }
+.ig-row--red .ig-btn[data-type="Gear"]::before { background-image: url('images/item-icons/original/red/gear.png'); }
+.ig-row--red .ig-btn[data-type="Junk"]::before { background-image: url('images/item-icons/original/red/junk.png'); }
+.ig-row--red .ig-btn[data-type="Mods"]::before { background-image: url('images/item-icons/original/red/mods.png'); }
+.ig-row--red .ig-btn[data-type="Food"]::before { background-image: url('images/item-icons/original/red/food.png'); }
+.ig-row--red .ig-btn[data-type="Chems"]::before { background-image: url('images/item-icons/original/red/chems.png'); }
+.ig-row--red .ig-btn[data-type="PowerArmor"]::before { background-image: url('images/item-icons/original/red/power-armor.png'); }
 }
 
 .ig-btn:hover {
