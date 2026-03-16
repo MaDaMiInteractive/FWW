@@ -1134,6 +1134,9 @@
 
   // -------------------- Inventory tab --------------------
   function renderInventory() {
+    // Inventory actions re-render this view directly, so wipe old nodes first.
+    contentEl.innerHTML = '';
+
     const title = document.createElement('h2');
     title.className = 'section-title';
     title.textContent = 'Инвентарь и сундук';

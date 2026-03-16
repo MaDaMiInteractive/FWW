@@ -119,6 +119,34 @@ function createDefaultItemFilter() {
   return { group: null, weapon: null, flags: { stripes: false, mods: false, chem: false } }
 }
 
+function normalizeSearchText(value) {
+  return String(value || '').trim().toLowerCase()
+}
+
+function matchesPickerSearch(query, ...values) {
+  if (!query) return true
+  return values.some(value => normalizeSearchText(value).includes(query))
+}
+
+function getCardLayout(item) {
+  const raw = String(item?.cardLayout || '').trim().toLowerCase()
+  if (raw === 'portrait' || raw === 'vertical') return 'portrait'
+  if (raw === 'landscape' || raw === 'horizontal') return 'landscape'
+  return ''
+}
+
+function shouldForcePortraitCard(item) {
+  const layout = getCardLayout(item)
+  if (layout === 'portrait') return true
+  if (layout === 'landscape') return false
+  const cats = item?.cats || {}
+  return !!(cats.Chem || cats.Alcohol || cats['Power Armor'])
+}
+
+function shouldForcePortraitMod(item) {
+  return getCardLayout(item) === 'portrait'
+}
+
 function resolveStoredPdfSize() {
   try {
     const saved = localStorage.getItem('pdfCardSize')
@@ -136,6 +164,7 @@ const state = {
   pickerForUnitId: null,
   unitFilter: 'Все',
   itemFilter: createDefaultItemFilter(),
+  pickerSearch: '',
   availableItems: [],
   modTarget: null,
   pdfCardSize: resolveStoredPdfSize(),
@@ -399,6 +428,7 @@ function normalizeItem(raw) {
   const item = { ...raw }
   item.img = ITEMS_MAP[item.id] || `images/items/${item.id}.png`
   item.name = (item.name || '').trim()
+  item.cardLayout = String(raw.card_layout || raw.cardLayout || raw.layout || raw.orientation || '').trim()
   const weapon = {}
   WEAPON_KEYS.forEach(k => { weapon[k] = Boolean(raw.weapon && raw.weapon[k]) })
   item.weapon = weapon
@@ -486,6 +516,7 @@ function closeModal() {
     $('#filters').innerHTML = ''
     state.availableItems = []
     state.itemFilter = createDefaultItemFilter()
+    state.pickerSearch = ''
     state.unitFilter = 'Все'
     state.modTarget = null
   }
@@ -671,13 +702,9 @@ function createRosterItemCard(unit, cardData, index, item, isPower) {
   img.alt = item.name || ''
   safeImg(img, item.img, 'images/missing-item.png')
 
-  // Only force vertical for specific categories: Chem, Alcohol, Power Armor
-  const cats = item.cats || {};
-  const forceVertical = !!(cats.Chem || cats.Alcohol || cats['Power Armor']);
-
   const preferPortrait = itemHasSpecialBars(item);
   ensurePortraitImage(img, { preferPortrait })
-  flagCardOrientation(img, card, forceVertical)
+  flagCardOrientation(img, card, shouldForcePortraitCard(item))
 
   title.textContent = item.name
 
@@ -735,10 +762,7 @@ function createRosterModCard(unit, cardIndex, modItem, baseItem) {
   img.alt = modItem.name || ''
   safeImg(img, modItem.img, 'images/missing-item.png')
   ensurePortraitImage(img, { preferPortrait: itemHasSpecialBars(modItem) })
-  // Power Armor mods are stored sideways (landscape) but should be shown as portrait.
-  // We can reliably detect this when the mod is attached to a Power Armor base card.
-  const forceVertical = !!(baseItem && baseItem.cats && baseItem.cats['Power Armor'])
-  flagCardOrientation(img, card, forceVertical)
+  flagCardOrientation(img, card, shouldForcePortraitMod(modItem))
 
   title.textContent = modItem.name
   meta.textContent = (modItem.cost || 0) + ' крышек'
@@ -779,10 +803,7 @@ function buildModCard(unit, cardIndex, modItem) {
   img.className = 'roster-card__mod-image card__img'
   safeImg(img, modItem.img, 'images/missing-item.png')
   ensurePortraitImage(img, { preferPortrait: itemHasSpecialBars(modItem) })
-  // If this mod is attached to a Power Armor base card, show it as portrait.
-  const base = unit && unit.cards && unit.cards[cardIndex] ? getItem(unit.cards[cardIndex].itemId) : null
-  const forceVertical = !!(base && base.cats && base.cats['Power Armor'])
-  flagCardOrientation(img, wrap, forceVertical)
+  flagCardOrientation(img, wrap, shouldForcePortraitMod(modItem))
   media.appendChild(img)
   content.appendChild(media)
 
@@ -936,6 +957,7 @@ function calcRosterPoints() {
 
 function addUnitPick() {
   state.pickerMode = 'unit'
+  state.pickerSearch = ''
   state.unitFilter = 'Все'
   openModal('Выбор персонажа')
   renderUnitFilters()
@@ -949,6 +971,27 @@ function getUnitsForPicker() {
   if (state.unitFilter === 'Уникальные') list = list.filter(x => x.unique)
   return list
 }
+
+function appendPickerSearch(host, placeholder, onChange) {
+  const row = document.createElement('div')
+  row.className = 'filter-row filter-row--search'
+
+  const input = document.createElement('input')
+  input.type = 'search'
+  input.className = 'filter-search'
+  input.placeholder = placeholder
+  input.autocomplete = 'off'
+  input.spellcheck = false
+  input.value = state.pickerSearch || ''
+  input.addEventListener('input', () => {
+    state.pickerSearch = input.value
+    onChange()
+  })
+
+  row.appendChild(input)
+  host.appendChild(row)
+}
+
 function renderUnitFilters() {
   const host = $('#filters'); host.innerHTML = ''
     ;['Все', 'Уникальные'].forEach(label => {
@@ -957,13 +1000,20 @@ function renderUnitFilters() {
       btn.onclick = () => { state.unitFilter = label; renderUnitFilters(); renderUnitPicker() }
       host.appendChild(btn)
     })
+  appendPickerSearch(host, 'Поиск персонажа по названию', renderUnitPicker)
 }
 function renderUnitPicker() {
   const list = $('#pickerList'); list.innerHTML = ''; list.classList.add('picker-units'); list.classList.remove('picker-items', 'picker-mods')
-  const units = getUnitsForPicker().slice().sort((a, b) => {
+  const query = normalizeSearchText(state.pickerSearch)
+  const units = getUnitsForPicker().filter(u => matchesPickerSearch(query, u.name, u.id)).slice().sort((a, b) => {
     if (a.cost !== b.cost) return a.cost - b.cost
     return a.name.localeCompare(b.name, 'ru')
   })
+  if (!units.length) {
+    const empty = document.createElement('div'); empty.className = 'empty'; empty.textContent = 'Нет подходящих персонажей'
+    list.appendChild(empty)
+    return
+  }
   units.forEach(u => {
     const card = document.createElement('div'); card.className = 'card card-unit'; card.dataset.id = u.id
     card.classList.add('card--picker', 'card--unit')
@@ -1016,6 +1066,7 @@ function openItemPicker(uid) {
   state.pickerMode = 'item'
   state.pickerForUnitId = uid
   state.itemFilter = createDefaultItemFilter()
+  state.pickerSearch = ''
   openModal(`Добавление карт: ${unit.name}`)
   state.availableItems = computeAvailableItems(unit)
   state.availableItems.sort((a, b) => {
@@ -1100,9 +1151,17 @@ function getCatalogItems(unit) {
 }
 function renderItemFilters(unit) {
   const host = $('#filters'); host.innerHTML = ''
-  const filtersRow = document.createElement('div'); filtersRow.className = 'filter-row'
+  const usingModCatalog = !!state.itemFilter.flags.mods
   const source = getCatalogItems(unit)
-  const availableGroups = ITEM_GROUPS.filter(group => source.some(item => itemMatchesGroup(item, group.key)))
+  if (usingModCatalog) {
+    state.itemFilter.group = null
+    state.itemFilter.weapon = null
+  }
+  const groupAvailability = new Map(ITEM_GROUPS.map(group => [group.key, source.some(item => itemMatchesGroup(item, group.key))]))
+  if (state.itemFilter.group && !groupAvailability.get(state.itemFilter.group)) {
+    state.itemFilter.group = null
+    state.itemFilter.weapon = null
+  }
   const makeBtn = (label, value) => {
     const btn = document.createElement('button'); btn.className = 'filter'; btn.textContent = label
     const active = state.itemFilter.group === value || (value === null && !state.itemFilter.group)
@@ -1110,10 +1169,20 @@ function renderItemFilters(unit) {
     btn.onclick = () => { state.itemFilter.group = value; if (value !== 'Weapons') state.itemFilter.weapon = null; renderItemFilters(unit); renderItemPicker(unit) }
     return btn
   }
-  filtersRow.appendChild(makeBtn('Все', null))
-  availableGroups.forEach(group => { filtersRow.appendChild(makeBtn(group.label, group.key)) })
-  host.appendChild(filtersRow)
-  if (state.itemFilter.group === 'Weapons') {
+  if (!usingModCatalog) {
+    const filtersRow = document.createElement('div'); filtersRow.className = 'filter-row'
+    filtersRow.appendChild(makeBtn('Все', null))
+    ITEM_GROUPS.forEach(group => {
+      const btn = makeBtn(group.label, group.key)
+      if (!groupAvailability.get(group.key)) {
+        btn.disabled = true
+        btn.title = 'Нет доступных карт этого типа'
+      }
+      filtersRow.appendChild(btn)
+    })
+    host.appendChild(filtersRow)
+  }
+  if (!usingModCatalog && state.itemFilter.group === 'Weapons') {
     const sub = document.createElement('div'); sub.className = 'filter-row sub'
     const availableWeapons = WEAPON_KEYS.filter(key => source.some(item => itemMatchesGroup(item, 'Weapons', key)))
     if (availableWeapons.length && !availableWeapons.includes(state.itemFilter.weapon)) state.itemFilter.weapon = availableWeapons[0]
@@ -1144,6 +1213,7 @@ function renderItemFilters(unit) {
     togglesRow.appendChild(btn)
   })
   host.appendChild(togglesRow)
+  appendPickerSearch(host, usingModCatalog ? 'Поиск мода по названию' : 'Поиск карты по названию', () => renderItemPicker(unit))
 }
 function renderItemPicker(unit) {
   const list = $('#pickerList'); list.innerHTML = ''; list.classList.add('picker-items'); list.classList.remove('picker-units', 'picker-mods')
@@ -1151,7 +1221,9 @@ function renderItemPicker(unit) {
   const weaponFilter = group === 'Weapons' ? state.itemFilter.weapon : null
   const source = getCatalogItems(unit)
   const usingModCatalog = !!state.itemFilter.flags.mods
+  const query = normalizeSearchText(state.pickerSearch)
   const items = source.filter(item => {
+    if (!matchesPickerSearch(query, item.name, item.id)) return false
     if (!itemMatchesActiveFlags(item)) return false
     if (!group) return true
     if (group === 'Weapons') {
@@ -1175,7 +1247,7 @@ function renderItemPicker(unit) {
     // Без дополнительных пометок на плитках (только имя + стоимость)
     const thumb = document.createElement('div')
     thumb.classList.add('card__thumb')
-    const img = document.createElement('img'); img.className = 'thumb thumb-item card__img'; safeImg(img, item.img, 'images/missing-item.png'); ensurePortraitImage(img, { preferPortrait: itemHasSpecialBars(item) }); flagCardOrientation(img, card)
+    const img = document.createElement('img'); img.className = 'thumb thumb-item card__img'; safeImg(img, item.img, 'images/missing-item.png'); ensurePortraitImage(img, { preferPortrait: itemHasSpecialBars(item) }); flagCardOrientation(img, card, item.is_mod ? shouldForcePortraitMod(item) : shouldForcePortraitCard(item))
     thumb.appendChild(img)
     card.appendChild(thumb)
     const body = document.createElement('div'); body.className = 'card-body'; body.classList.add('card__body')
@@ -1213,10 +1285,10 @@ function openModPicker(uid, index) {
   if (!base || !base.modType) return
   state.pickerMode = 'mod'
   state.modTarget = { unitId: uid, cardIndex: index }
+  state.pickerSearch = ''
   openModal(`Модификации: ${base.name}`)
-  $('#filters').innerHTML = ''
+  renderModFilters(base)
   const mods = availableModsForCard(unit, card, base)
-  // Pass base so Power Armor mods can be rendered vertically.
   renderModPicker(mods, base)
 }
 function availableModsForCard(unit, card, base) {
@@ -1234,25 +1306,26 @@ function availableModsForCard(unit, card, base) {
   })
 }
 function renderModPicker(mods, base = null) {
-  const forceVertical = !!(base && base.cats && base.cats['Power Armor'])
   const list = $('#pickerList'); list.innerHTML = ''; list.classList.add('picker-mods'); list.classList.remove('picker-units', 'picker-items')
-  if (!mods.length) {
+  const query = normalizeSearchText(state.pickerSearch)
+  const visibleMods = mods.filter(mod => matchesPickerSearch(query, mod.name, mod.id))
+  if (!visibleMods.length) {
     const empty = document.createElement('div'); empty.className = 'empty'; empty.textContent = 'Нет доступных модификаций'
     list.appendChild(empty)
     return
   }
-  mods.sort((a, b) => {
+  visibleMods.sort((a, b) => {
     if (a.cost !== b.cost) return a.cost - b.cost
     return a.name.localeCompare(b.name, 'ru')
   })
-  mods.forEach(mod => {
+  visibleMods.forEach(mod => {
     const card = document.createElement('div'); card.className = 'card card-item'; card.dataset.id = mod.id
     card.classList.add('card--picker', 'card--mod')
     card.dataset.cardType = 'mod'
     // Без дополнительных пометок на плитках (только имя + стоимость)
     const thumb = document.createElement('div')
     thumb.classList.add('card__thumb')
-    const img = document.createElement('img'); img.className = 'thumb thumb-item card__img'; safeImg(img, mod.img, 'images/missing-item.png'); ensurePortraitImage(img, { preferPortrait: itemHasSpecialBars(mod) }); flagCardOrientation(img, card, forceVertical)
+    const img = document.createElement('img'); img.className = 'thumb thumb-item card__img'; safeImg(img, mod.img, 'images/missing-item.png'); ensurePortraitImage(img, { preferPortrait: itemHasSpecialBars(mod) }); flagCardOrientation(img, card, shouldForcePortraitMod(mod))
     thumb.appendChild(img)
     card.appendChild(thumb)
     const body = document.createElement('div'); body.className = 'card-body'; body.classList.add('card__body')
@@ -1267,6 +1340,18 @@ function renderModPicker(mods, base = null) {
     card.tabIndex = 0
     card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate() } })
     list.appendChild(card)
+  })
+}
+
+function renderModFilters(base) {
+  const host = $('#filters')
+  host.innerHTML = ''
+  appendPickerSearch(host, `Поиск модификации для ${base.name}`, () => {
+    const unit = state.modTarget ? getUnitByUid(state.modTarget.unitId) : null
+    const card = unit && state.modTarget ? unit.cards[state.modTarget.cardIndex] : null
+    const baseItem = card ? getItem(card.itemId) : null
+    if (!unit || !card || !baseItem) return
+    renderModPicker(availableModsForCard(unit, card, baseItem), baseItem)
   })
 }
 
@@ -1554,8 +1639,7 @@ async function buildPrintSheet() {
       // Determine if the image should be treated as portrait.
       let forceVertical = false;
       if (entry.item) {
-        const cats = entry.item.cats || {};
-        forceVertical = !!(cats.Chem || cats.Alcohol || cats['Power Armor']);
+        forceVertical = entry.item.is_mod ? shouldForcePortraitMod(entry.item) : shouldForcePortraitCard(entry.item);
       } else {
         forceVertical = true;
       }
@@ -1591,8 +1675,6 @@ async function buildPrintSheet() {
       })();
       loadPromises.push(prep);
 
-      const baseIsPowerArmor = !!(entry.item && entry.item.cats && entry.item.cats['Power Armor']);
-
       if (entry.mods && entry.mods.length) {
         const modsWrap = document.createElement('div');
         modsWrap.className = 'pdf-card__mod';
@@ -1604,13 +1686,12 @@ async function buildPrintSheet() {
           safeImg(modImg, modEntry.img, modEntry.fallback);
           modsWrap.appendChild(modImg);
 
-          // Power Armor mods are also stored sideways; rotate them for printing.
           const modPrep = (async () => {
             await waitForImageLoad(modImg, 15000);
             const w = modImg.naturalWidth;
             const h = modImg.naturalHeight;
             if (!w || !h) return;
-            if (baseIsPowerArmor && w >= h) {
+            if (modEntry.item && shouldForcePortraitMod(modEntry.item) && w >= h) {
               const dataUrl = rotateImageLeftDataURL(modImg);
               if (dataUrl) {
                 modImg.src = dataUrl;
@@ -1676,7 +1757,7 @@ function createPrintEntryFromCard(entry) {
         return {
           img: entry.item.img,
           fallback: 'images/missing-item.png',
-          mods: [{ img: modItem.img, fallback: 'images/missing-item.png' }],
+          mods: [{ img: modItem.img, fallback: 'images/missing-item.png', item: modItem }],
           item: entry.item,
           isUnit: !!entry.item.unit
         }

@@ -524,8 +524,8 @@ a {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 18px;
-  max-width: min(1280px, 96vw);
-  width: 96vw;
+  max-width: min(1540px, calc(100vw - 32px));
+  width: min(1540px, calc(100vw - 32px));
   max-height: 92vh;
   display: flex;
   flex-direction: column;
@@ -586,6 +586,10 @@ a {
   gap: .45rem;
 }
 
+.filter-row--search {
+  margin-top: .15rem;
+}
+
 .filter-row.sub {
   border-top: 1px solid var(--border);
   padding-top: .45rem;
@@ -604,6 +608,31 @@ a {
 
 .filter.active {
   outline: 2px solid #3a86ff55;
+}
+
+.filter:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.filter-search {
+  width: min(420px, 100%);
+  min-height: 40px;
+  padding: .65rem .85rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(10, 14, 20, .96);
+  color: var(--text);
+  outline: none;
+}
+
+.filter-search::placeholder {
+  color: var(--muted);
+}
+
+.filter-search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(58, 134, 255, .16);
 }
 
 .filter-toggle {
@@ -632,25 +661,28 @@ a {
 
 .grid.picker-units {
   /* 4–6 карт в ряд (в зависимости от ширины экрана) */
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   /* Не даём разъезжаться в 7–8 колонок на очень широких экранах */
-  max-width: calc(6 * 240px + 5 * 1rem + 2.4rem);
+  max-width: calc(6 * 220px + 5 * 1rem + 2.4rem);
+  width: min(100%, calc(6 * 220px + 5 * 1rem + 2.4rem));
   margin: 0 auto;
 }
 
 .grid.picker-items {
   /* 4–6 карт в ряд (в зависимости от ширины экрана) */
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   /* Не даём разъезжаться в 7–8 колонок на очень широких экранах */
-  max-width: calc(6 * 240px + 5 * 1rem + 2.4rem);
+  max-width: calc(6 * 220px + 5 * 1rem + 2.4rem);
+  width: min(100%, calc(6 * 220px + 5 * 1rem + 2.4rem));
   margin: 0 auto;
 }
 
 .grid.picker-mods {
   /* 4–6 карт в ряд (в зависимости от ширины экрана) */
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   /* Не даём разъезжаться в 7–8 колонок на очень широких экранах */
-  max-width: calc(6 * 240px + 5 * 1rem + 2.4rem);
+  max-width: calc(6 * 220px + 5 * 1rem + 2.4rem);
+  width: min(100%, calc(6 * 220px + 5 * 1rem + 2.4rem));
   margin: 0 auto;
 }
 
