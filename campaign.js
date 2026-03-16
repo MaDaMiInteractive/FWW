@@ -118,6 +118,29 @@
   // -------------------- state --------------------
   const STORAGE_KEY = 'fww_campaign_state_v2';
   const STASH_IMG = 'images/stash-placeholder.svg';
+  const SPECIAL_MOD_KEYS = ['str', 'per', 'end', 'cha', 'int', 'agi', 'luc'];
+
+  function makeDefaultSpecialMods() {
+    return {
+      str: '',
+      per: '',
+      end: '',
+      cha: '',
+      int: '',
+      agi: '',
+      luc: '',
+    };
+  }
+
+  function ensureUnitManualFields(unit) {
+    if (!unit.specialMods || typeof unit.specialMods !== 'object') {
+      unit.specialMods = makeDefaultSpecialMods();
+    }
+    SPECIAL_MOD_KEYS.forEach(key => {
+      if (typeof unit.specialMods[key] !== 'string') unit.specialMods[key] = '';
+    });
+    if (typeof unit.visibilityMod !== 'string') unit.visibilityMod = '';
+  }
 
   function makeDefaultLocation() {
     return {
@@ -153,6 +176,8 @@
       addicted: '',
       injuries: ['', '', ''],
       notes: '',
+      specialMods: makeDefaultSpecialMods(),
+      visibilityMod: '',
       equipment: [],
       perkSlots: [null, null, null, null], // 4
       upgradeSlots: [null, null, null, null, null, null, null, null], // 8
@@ -250,6 +275,7 @@
         u.expertise = deepClone(makeDefaultUnit(u.unitId).expertise);
       }
       if (!Array.isArray(u.equipment)) u.equipment = [];
+      ensureUnitManualFields(u);
     });
   }
 
@@ -287,6 +313,7 @@
 
   function render() {
     renderMeta();
+    document.body.dataset.tab = state.tab || '';
 
     // tab highlight
     $$('.campaign-tabs .tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === state.tab));
@@ -594,13 +621,61 @@
     leftTitle.textContent = 'Карточка и параметры';
     left.appendChild(leftTitle);
 
+    ensureUnitManualFields(unit);
+
+    const cardShell = document.createElement('div');
+    cardShell.className = 'unit-card-shell';
+
     const card = document.createElement('div');
     card.className = 'unit-card';
     const img = document.createElement('img');
     img.alt = unit.name || '';
     safeImg(img, unit.img || 'images/missing-unit.png', 'images/missing-unit.png');
     card.appendChild(img);
-    left.appendChild(card);
+    cardShell.appendChild(card);
+
+    const specialMods = document.createElement('div');
+    specialMods.className = 'unit-card-manual unit-card-manual--special';
+    [
+      ['str', 'STR'],
+      ['per', 'PER'],
+      ['end', 'END'],
+      ['cha', 'CHA'],
+      ['int', 'INT'],
+      ['agi', 'AGI'],
+      ['luc', 'LUC'],
+    ].forEach(([key, label]) => {
+      const input = document.createElement('input');
+      input.className = 'unit-card-manual__input';
+      input.type = 'text';
+      input.inputMode = 'numeric';
+      input.maxLength = 4;
+      input.value = unit.specialMods[key] || '';
+      input.title = `Модификатор ${label}`;
+      input.setAttribute('aria-label', `Модификатор ${label}`);
+      input.addEventListener('input', () => {
+        unit.specialMods[key] = input.value;
+        persistState();
+      });
+      specialMods.appendChild(input);
+    });
+    cardShell.appendChild(specialMods);
+
+    const visibilityMod = document.createElement('input');
+    visibilityMod.className = 'unit-card-manual__input unit-card-manual__input--vision';
+    visibilityMod.type = 'text';
+    visibilityMod.inputMode = 'numeric';
+    visibilityMod.maxLength = 4;
+    visibilityMod.value = unit.visibilityMod || '';
+    visibilityMod.title = 'Модификатор дальности видимости';
+    visibilityMod.setAttribute('aria-label', 'Модификатор дальности видимости');
+    visibilityMod.addEventListener('input', () => {
+      unit.visibilityMod = visibilityMod.value;
+      persistState();
+    });
+    cardShell.appendChild(visibilityMod);
+
+    left.appendChild(cardShell);
 
     const grid = document.createElement('div');
     grid.className = 'form-grid';
@@ -664,7 +739,7 @@
 
     // Status toggles
     const stWrap = document.createElement('div');
-    stWrap.className = 'field col-12';
+    stWrap.className = 'field col-12 unit-status-field';
     const stLabel = document.createElement('label');
     stLabel.textContent = 'Статус';
     const stRow = document.createElement('div');

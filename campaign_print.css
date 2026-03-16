@@ -1,7 +1,7 @@
 @media print {
   @page {
     size: A4 landscape;
-    margin: 10mm;
+    margin: 6mm;
   }
 
   html,
@@ -92,5 +92,125 @@
   * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  body.campaign-page {
+    padding-bottom: 0 !important;
+  }
+
+  body[data-tab="Units"] .campaign-header,
+  body[data-tab="Units"] .campaign-footer {
+    display: none !important;
+  }
+
+  body[data-tab="Units"] .campaign-content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body[data-tab="Units"] .unit-nav,
+  body[data-tab="Units"] .unit-subtabs,
+  body[data-tab="Units"] .unit-status-field {
+    display: none !important;
+  }
+
+  body[data-tab="Units"] .units-layout {
+    grid-template-columns: 108mm 1fr !important;
+    gap: 4mm !important;
+    align-items: start !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  body[data-tab="Units"] .panel-block {
+    padding: 3mm !important;
+  }
+
+  body[data-tab="Units"] .section-title {
+    font-size: 11pt !important;
+    margin: 0 0 2mm !important;
+  }
+
+  body[data-tab="Units"] .unit-card-shell {
+    max-width: 108mm !important;
+    margin-right: 12mm !important;
+  }
+
+  body[data-tab="Units"] .unit-card {
+    max-width: 94mm !important;
+  }
+
+  body[data-tab="Units"] .unit-card-manual--special {
+    right: -10mm !important;
+    gap: 1.2mm !important;
+  }
+
+  body[data-tab="Units"] .unit-card-manual__input {
+    width: 7mm !important;
+    height: 7mm !important;
+    font-size: 8pt !important;
+    border: 1px solid #000 !important;
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  body[data-tab="Units"] .unit-card-manual__input--vision {
+    width: 10mm !important;
+    right: 4mm !important;
+    bottom: 4mm !important;
+  }
+
+  body[data-tab="Units"] .form-grid {
+    gap: 2mm !important;
+  }
+
+  body[data-tab="Units"] .field {
+    gap: .8mm !important;
+  }
+
+  body[data-tab="Units"] .field label {
+    font-size: 7pt !important;
+  }
+
+  body[data-tab="Units"] .input,
+  body[data-tab="Units"] select.input {
+    min-height: 0 !important;
+    padding: 1.1mm 1.4mm !important;
+    font-size: 8pt !important;
+  }
+
+  body[data-tab="Units"] .numstep {
+    gap: 1mm !important;
+  }
+
+  body[data-tab="Units"] .card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 2mm !important;
+  }
+
+  body[data-tab="Units"] .card-tile__body {
+    padding: 1.5mm !important;
+    gap: 1mm !important;
+  }
+
+  body[data-tab="Units"] .card-tile__title {
+    font-size: 7.5pt !important;
+  }
+
+  body[data-tab="Units"] .card-tile__meta {
+    font-size: 7pt !important;
+  }
+
+  body[data-tab="Units"] .stats-layout {
+    gap: 3mm !important;
+  }
+
+  body[data-tab="Units"] .stat-box {
+    padding: 2mm !important;
+  }
+
+  body[data-tab="Units"] .stat-row {
+    font-size: 7.5pt !important;
   }
 }
