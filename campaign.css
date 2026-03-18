@@ -291,7 +291,7 @@ body.campaign-page {
   position: relative;
   width: fit-content;
   max-width: 470px;
-  margin-right: 52px;
+  margin-right: 58px;
 }
 
 .unit-card-manual {
@@ -300,11 +300,11 @@ body.campaign-page {
 }
 
 .unit-card-manual--special {
-  top: 49%;
-  right: -42px;
-  transform: translateY(-50%);
+  top: 108px;
+  right: -44px;
+  transform: none;
   display: grid;
-  gap: 8px;
+  gap: 24px;
 }
 
 .unit-card-manual__input {
@@ -445,7 +445,8 @@ body.campaign-page {
 }
 
 .stash-card {
-  max-width: 420px;
+  max-width: 340px;
+  margin: 0 auto;
 }
 
 /* Дополнительные отступы для левой панели Inventory */

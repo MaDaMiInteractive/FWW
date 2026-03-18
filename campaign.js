@@ -67,6 +67,8 @@
     return JSON.parse(JSON.stringify(obj));
   }
 
+  const STASH_IMG = 'images/units/stash.png?v=20260318';
+
   // -------------------- db --------------------
   const db = {
     units: [],
@@ -100,7 +102,7 @@
 
     db.units = unitsRaw.map(u => ({
       ...u,
-      img: db.unitsMap[u.id] || `images/units/${u.id}.png`,
+      img: u.id === 'stash' ? STASH_IMG : (db.unitsMap[u.id] || `images/units/${u.id}.png`),
       name: (u.name || '').trim(),
     }));
     db.items = itemsRaw.map(it => ({
@@ -117,7 +119,6 @@
 
   // -------------------- state --------------------
   const STORAGE_KEY = 'fww_campaign_state_v2';
-  const STASH_IMG = 'images/stash-placeholder.svg';
   const SPECIAL_MOD_KEYS = ['str', 'per', 'end', 'cha', 'int', 'agi', 'luc'];
 
   function makeDefaultSpecialMods() {
@@ -163,7 +164,7 @@
       uid: `u_${Math.random().toString(36).slice(2, 10)}`,
       unitId,
       isStash: !!base?.is_stash,
-      img: base?.img || 'images/missing-unit.png',
+      img: base?.is_stash ? STASH_IMG : (base?.img || 'images/missing-unit.png'),
       name: base?.name || 'Unit',
       rank: '',
       xp: 0,
@@ -252,6 +253,9 @@
     // ensure arrays sizes
     state.units.forEach(u => {
       u.isStash = Boolean(u.isStash || db.unitsById[u.unitId]?.is_stash);
+      if (u.isStash) {
+        u.img = STASH_IMG;
+      }
       if (u.isStash && (!u.name || u.name === 'Stash' || u.name === 'Inventory')) {
         u.name = db.unitsById[u.unitId]?.name || 'Сундук / инвентарь';
       }

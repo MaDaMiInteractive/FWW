@@ -141,8 +141,10 @@
   }
 
   body[data-tab="Units"] .unit-card-manual--special {
-    right: -10mm !important;
-    gap: 1.2mm !important;
+    top: 18.8mm !important;
+    right: -10.2mm !important;
+    transform: none !important;
+    gap: 4.7mm !important;
   }
 
   body[data-tab="Units"] .unit-card-manual__input {
