@@ -76,24 +76,28 @@ function flagCardOrientation(img, cardEl, forceVertical = false) {
   if (!img || !cardEl) return;
 
   const apply = () => {
-    const w = img.naturalWidth;
-    const h = img.naturalHeight;
+    let w = img.naturalWidth;
+    let h = img.naturalHeight;
     if (!w || !h) return;
 
-    let isLandscape = w >= h;
-    let rotate = false;
-
-    if (forceVertical && isLandscape) {
-      isLandscape = false;
-      rotate = true;
+    if (forceVertical && w >= h && img.dataset.rotatedActual !== '1') {
+      img.dataset.rotatedActual = '1';
+      const dataUrl = rotateImageLeftDataURL(img);
+      if (dataUrl) {
+        img.src = dataUrl;
+        return;
+      }
     }
+
+    let isLandscape = w >= h;
+    if (forceVertical && isLandscape) isLandscape = false;
 
     cardEl.classList.toggle('is-landscape', isLandscape);
     cardEl.classList.toggle('is-portrait', !isLandscape);
     cardEl.classList.toggle('is-landscape-card', isLandscape);
     cardEl.classList.toggle('is-portrait-card', !isLandscape);
 
-    img.classList.toggle('img--rotated', rotate);
+    img.classList.remove('img--rotated');
 
     img.removeEventListener('load', apply);
   };
