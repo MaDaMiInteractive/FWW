@@ -347,6 +347,8 @@
 
   // -------------------- Locations tab --------------------
   function renderLocations() {
+    contentEl.innerHTML = '';
+
     const top = document.createElement('div');
     top.className = 'unit-nav';
 
@@ -1939,6 +1941,330 @@
     renderGen();
   }
 
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function toAbsoluteUrl(path) {
+    const raw = String(path || '').trim();
+    if (!raw) return '';
+    try {
+      return new URL(raw, window.location.href).href;
+    } catch {
+      return raw;
+    }
+  }
+
+  function locationLabelForUnit(unit) {
+    const loc = state.locations.find(x => x.id === unit.locationId);
+    if (!loc) return '';
+    return (loc.name || '').trim() || 'Локация';
+  }
+
+  function printFieldHtml(label, value, extraClass = '') {
+    return `
+      <div class="print-field ${extraClass}">
+        <div class="print-field__label">${escapeHtml(label)}</div>
+        <div class="print-field__value">${escapeHtml(value || '')}</div>
+      </div>
+    `;
+  }
+
+  function printTileHtml(item, meta = '', extraClass = '') {
+    if (!item) return '';
+    const cats = item.cats || {};
+    const isPortrait = !!(cats['Power Armor'] || cats.Chem || cats.Alcohol);
+    const imgSrc = toAbsoluteUrl(item.img || 'images/missing-item.png');
+    const fallbackSrc = toAbsoluteUrl('images/missing-item.png');
+    return `
+      <article class="print-tile ${isPortrait ? 'print-tile--portrait' : ''} ${extraClass}">
+        <div class="print-tile__img">
+          <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(item.name || '')}" onerror="this.onerror=null;this.src='${escapeHtml(fallbackSrc)}';">
+        </div>
+        <div class="print-tile__body">
+          <div class="print-tile__title">${escapeHtml(item.name || 'Предмет')}</div>
+          <div class="print-tile__meta">${escapeHtml(meta)}</div>
+        </div>
+      </article>
+    `;
+  }
+
+  function printEmptyTileHtml(title, meta = '', extraClass = '') {
+    return `
+      <article class="print-tile print-tile--empty ${extraClass}">
+        <div class="print-tile__body">
+          <div class="print-tile__title">${escapeHtml(title)}</div>
+          <div class="print-tile__meta">${escapeHtml(meta)}</div>
+        </div>
+      </article>
+    `;
+  }
+
+  function printPerkGridHtml(unit) {
+    const tiles = [];
+    for (let i = 0; i < 4; i++) {
+      const perkId = unit.perkSlots?.[i] || null;
+      const threshold = PERK_XP_THRESHOLDS[i];
+      if (perkId && db.itemsById[perkId]) {
+        tiles.push(printTileHtml(db.itemsById[perkId], `Перк • XP ${threshold}`));
+      } else {
+        tiles.push(printEmptyTileHtml(`Перк ${i + 1}`, `XP ${threshold}`));
+      }
+    }
+    return `<div class="print-slot-grid">${tiles.join('')}</div>`;
+  }
+
+  function printEquipmentGridHtml(unit) {
+    const ids = (unit.equipment || []).slice(0, 8);
+    if (!ids.length) return '<div class="print-empty-note">Нет предметов.</div>';
+    return `
+      <div class="print-tile-grid">
+        ${ids.map((itemId) => printTileHtml(db.itemsById[itemId], 'Предмет')).join('')}
+      </div>
+    `;
+  }
+
+  function printUpgradeGridHtml(unit) {
+    const tiles = [];
+    for (let i = 0; i < 8; i++) {
+      const upgradeId = unit.upgradeSlots?.[i] || null;
+      const threshold = UPGRADE_XP_THRESHOLDS[i];
+      const meta = threshold ? `XP ${threshold}` : '';
+      if (upgradeId && db.itemsById[upgradeId]) {
+        tiles.push(printTileHtml(db.itemsById[upgradeId], meta ? `Улучшение • ${meta}` : 'Улучшение'));
+      } else {
+        tiles.push(printEmptyTileHtml(`Улучшение ${i + 1}`, meta));
+      }
+    }
+    return `<div class="print-tile-grid">${tiles.join('')}</div>`;
+  }
+
+  function printStatsBoxHtml(title, fields, values) {
+    return `
+      <section class="print-stats-box">
+        <div class="print-stats-box__title">${escapeHtml(title)}</div>
+        <div class="print-stats-box__rows">
+          ${fields.map((field) => `
+            <div class="print-stat-row">
+              <span>${escapeHtml(field.label)}</span>
+              <strong>${escapeHtml(String(values?.[field.key] ?? 0))}</strong>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+    `;
+  }
+
+  function buildUnitPrintPageHtml(unit, index, total) {
+    ensureUnitManualFields(unit);
+
+    const cardSrc = toAbsoluteUrl(unit.img || 'images/missing-unit.png');
+    const cardFallback = toAbsoluteUrl('images/missing-unit.png');
+    const specialBoxes = SPECIAL_MOD_KEYS.map((key) => `
+      <div class="print-special-box">${escapeHtml(unit.specialMods?.[key] || '')}</div>
+    `).join('');
+
+    const detailsHtml = `
+      <div class="print-details-grid">
+        ${printFieldHtml('Награда', unit.bounty || '', 'span-2')}
+        ${printFieldHtml('Зависимость', unit.addicted || '', 'span-2')}
+        ${printFieldHtml('Травма 1', unit.injuries?.[0] || '')}
+        ${printFieldHtml('Травма 2', unit.injuries?.[1] || '')}
+        ${printFieldHtml('Травма 3', unit.injuries?.[2] || '')}
+        ${printFieldHtml('Заметки', unit.notes || '', 'span-4 print-field--notes')}
+      </div>
+    `;
+
+    const isUpgradesView = state.unitSubTab === 'Upgrades';
+    const rightMainHtml = isUpgradesView
+      ? `
+        <div class="print-section">
+          <div class="print-section__title">Слоты перков</div>
+          ${printPerkGridHtml(unit)}
+        </div>
+        <div class="print-section">
+          <div class="print-section__title">Улучшения</div>
+          ${printUpgradeGridHtml(unit)}
+        </div>
+        <div class="print-stats-wrap">
+          ${printStatsBoxHtml('Таблица убийств', [
+            { key: 'melee', label: 'Ближний бой' },
+            { key: 'pistol', label: 'Пистолет' },
+            { key: 'rifle', label: 'Винтовка' },
+            { key: 'hw', label: 'Тяжелое' },
+            { key: 'ghouls', label: 'Гули' },
+            { key: 'superMutants', label: 'Супермутанты' },
+            { key: 'raiders', label: 'Рейдеры' },
+            { key: 'animals', label: 'Животные' },
+            { key: 'humans', label: 'Люди' },
+          ], unit.killBoard)}
+          ${printStatsBoxHtml('Экспертиза', [
+            { key: 'search', label: 'Поиск' },
+            { key: 'computer', label: 'Компьютеры' },
+            { key: 'lockpick', label: 'Взлом' },
+            { key: 'repair', label: 'Ремонт' },
+            { key: 'crafting', label: 'Крафт' },
+            { key: 'doctor', label: 'Доктор' },
+            { key: 'battleCry', label: 'Боевой клич' },
+            { key: 'trading', label: 'Торговля' },
+          ], unit.expertise)}
+        </div>
+      `
+      : `
+        <div class="print-section">
+          <div class="print-section__title">Слоты перков</div>
+          ${printPerkGridHtml(unit)}
+        </div>
+        <div class="print-section">
+          <div class="print-section__title">Предметы (максимум 8)</div>
+          ${printEquipmentGridHtml(unit)}
+        </div>
+      `;
+
+    return `
+      <section class="print-unit-page">
+        <div class="print-sheet-header">
+          <div class="print-sheet-header__meta">
+            <div>${escapeHtml(state.meta.factionName || 'Без названия фракции')}</div>
+            <div>${escapeHtml(state.meta.crewName || 'Без названия банды')}</div>
+          </div>
+          <div class="print-sheet-header__page">${index + 1} / ${total}</div>
+        </div>
+
+        <div class="print-unit-layout">
+          <section class="print-panel print-panel--left">
+            <div class="print-panel__title">Карточка и параметры</div>
+
+            <div class="print-card-shell">
+              <div class="print-card">
+                <img src="${escapeHtml(cardSrc)}" alt="${escapeHtml(unit.name || '')}" onerror="this.onerror=null;this.src='${escapeHtml(cardFallback)}';">
+              </div>
+              <div class="print-special-column">${specialBoxes}</div>
+              <div class="print-vision-box">${escapeHtml(unit.visibilityMod || '')}</div>
+            </div>
+
+            <div class="print-core-fields">
+              ${printFieldHtml('Имя персонажа', unit.name || '', 'span-2')}
+              ${printFieldHtml('Локация', locationLabelForUnit(unit) || '—')}
+              ${printFieldHtml('Ранг', unit.rank || '')}
+              ${printFieldHtml('XP', String(unit.xp ?? 0))}
+              ${printFieldHtml('Общая стоимость', String(unitTotalCost(unit)), 'span-2')}
+            </div>
+          </section>
+
+          <section class="print-panel print-panel--right">
+            <div class="print-panel__title">${isUpgradesView ? 'Улучшения' : 'Снаряжение'}</div>
+            ${rightMainHtml}
+            ${detailsHtml}
+          </section>
+        </div>
+      </section>
+    `;
+  }
+
+  function buildCampaignPrintHtml(units) {
+    const pages = units.map((unit, index) => buildUnitPrintPageHtml(unit, index, units.length)).join('');
+    const title = escapeHtml(`Кампания FWW • ${state.meta.crewName || state.meta.factionName || 'Персонажи'}`);
+
+    return `<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>${title}</title>
+  <style>
+    @page { size: A4 landscape; margin: 5mm; }
+    * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    html, body { margin: 0; padding: 0; background: #fff; color: #000; font-family: Arial, sans-serif; }
+    body { font-size: 8.5pt; }
+    .print-unit-page { min-height: 100%; page-break-after: always; }
+    .print-unit-page:last-child { page-break-after: auto; }
+    .print-sheet-header { display: flex; justify-content: space-between; align-items: flex-end; margin: 0 0 2mm; font-size: 7.5pt; color: #444; }
+    .print-sheet-header__meta { display: flex; gap: 4mm; flex-wrap: wrap; }
+    .print-sheet-header__page { font-weight: 700; }
+    .print-unit-layout { display: grid; grid-template-columns: 98mm 1fr; gap: 3mm; align-items: start; }
+    .print-panel { border: .35mm solid #111; border-radius: 4mm; padding: 2.5mm; background: #fff; overflow: hidden; }
+    .print-panel__title { font-size: 10.5pt; font-weight: 700; margin: 0 0 1.7mm; }
+    .print-card-shell { position: relative; width: 92mm; margin: 0 auto 2.2mm; }
+    .print-card { width: 92mm; border: .35mm solid #111; border-radius: 4mm; overflow: hidden; background: #fff; }
+    .print-card img { width: 100%; display: block; height: auto; }
+    .print-special-column { position: absolute; top: 25.2mm; right: -9.1mm; display: grid; gap: 1mm; }
+    .print-special-box, .print-vision-box { border: .35mm solid #111; border-radius: 1.5mm; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 8pt; font-weight: 700; }
+    .print-special-box { width: 7.8mm; height: 7.2mm; }
+    .print-vision-box { position: absolute; right: 3.8mm; bottom: 3.4mm; width: 12mm; height: 7.2mm; }
+    .print-core-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2mm; }
+    .print-field.span-2 { grid-column: span 2; }
+    .print-field.span-3 { grid-column: span 3; }
+    .print-field.span-4 { grid-column: span 4; }
+    .print-field__label { font-size: 6.7pt; margin-bottom: .6mm; color: #333; }
+    .print-field__value { min-height: 6.8mm; border: .3mm solid #111; border-radius: 2.4mm; padding: 1mm 1.5mm; display: flex; align-items: center; overflow: hidden; }
+    .print-panel--right { display: flex; flex-direction: column; gap: 1.8mm; }
+    .print-section { display: flex; flex-direction: column; gap: 1.6mm; }
+    .print-section__title { font-size: 9pt; font-weight: 700; }
+    .print-slot-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.6mm; }
+    .print-tile-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1.6mm; }
+    .print-tile { border: .3mm solid #111; border-radius: 3mm; overflow: hidden; display: flex; flex-direction: column; background: #fff; min-height: 22mm; }
+    .print-tile--empty { justify-content: center; }
+    .print-tile__img { aspect-ratio: 3 / 2; border-bottom: .25mm solid #ccc; display: flex; align-items: center; justify-content: center; padding: 1mm; }
+    .print-tile--portrait .print-tile__img { aspect-ratio: 63 / 88; }
+    .print-tile__img img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+    .print-tile__body { padding: 1mm 1.1mm 1.2mm; display: flex; flex-direction: column; gap: .45mm; }
+    .print-tile__title { font-size: 6.2pt; font-weight: 700; line-height: 1.15; }
+    .print-tile__meta { font-size: 5.8pt; color: #444; line-height: 1.15; }
+    .print-empty-note { border: .3mm dashed #888; border-radius: 3mm; padding: 4mm; font-size: 8pt; color: #555; }
+    .print-details-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.7mm; }
+    .print-field--notes .print-field__value { min-height: 9mm; align-items: flex-start; }
+    .print-stats-wrap { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.7mm; }
+    .print-stats-box { border: .3mm solid #111; border-radius: 3mm; padding: 1.4mm 1.7mm; }
+    .print-stats-box__title { font-size: 8pt; font-weight: 700; margin-bottom: 1mm; }
+    .print-stats-box__rows { display: flex; flex-direction: column; gap: .4mm; }
+    .print-stat-row { display: flex; justify-content: space-between; gap: 2mm; font-size: 6.6pt; border-bottom: .2mm dashed #ddd; padding-bottom: .25mm; }
+    .print-stat-row:last-child { border-bottom: 0; padding-bottom: 0; }
+  </style>
+</head>
+<body>
+  ${pages}
+  <script>
+    window.addEventListener('load', function () {
+      var images = Array.prototype.slice.call(document.images || []);
+      Promise.all(images.map(function (img) {
+        return img.complete ? Promise.resolve() : new Promise(function (resolve) {
+          img.onload = img.onerror = resolve;
+        });
+      })).then(function () {
+        setTimeout(function () {
+          window.focus();
+          window.print();
+        }, 200);
+      });
+    });
+  </script>
+</body>
+</html>`;
+  }
+
+  function exportCampaignPdf() {
+    const units = state.units.filter(unit => !unit.isStash);
+    if (!units.length) {
+      alert('Нет персонажей для экспорта в PDF.');
+      return;
+    }
+
+    const printWindow = window.open('', '_blank', 'noopener');
+    if (!printWindow) {
+      alert('Браузер заблокировал окно печати. Разрешите всплывающие окна и повторите.');
+      return;
+    }
+
+    printWindow.document.open();
+    printWindow.document.write(buildCampaignPrintHtml(units));
+    printWindow.document.close();
+  }
+
   // -------------------- bindings --------------------
   function bindMeta() {
     const metaFactionName = $('#metaFactionName');
@@ -2009,7 +2335,7 @@
     }
 
     if (savePdfBtn) {
-      savePdfBtn.addEventListener('click', () => window.print());
+      savePdfBtn.addEventListener('click', exportCampaignPdf);
     }
 
     if (saveTxtBtn) {

@@ -300,11 +300,11 @@ body.campaign-page {
 }
 
 .unit-card-manual--special {
-  top: 108px;
-  right: -44px;
+  top: 104px;
+  right: -38px;
   transform: none;
   display: grid;
-  gap: 24px;
+  gap: 4px;
 }
 
 .unit-card-manual__input {
@@ -470,14 +470,14 @@ body.campaign-page {
 }
 
 .generator {
-  padding: 1rem;
-  gap: 1rem;
+  padding: .75rem;
+  gap: .75rem;
 }
 
 .generator__top {
   display: grid;
   grid-template-columns: 1fr 1.4fr;
-  gap: 1rem;
+  gap: .75rem;
 }
 
 @media (max-width: 1100px) {
@@ -489,19 +489,19 @@ body.campaign-page {
   background: #0c0f13;
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: .85rem .9rem .95rem;
+  padding: .65rem .75rem .75rem;
 }
 
 .generator__weights-title,
 .generator__types-title,
 .generator__results-title {
   font-weight: 800;
-  margin-bottom: .55rem;
+  margin-bottom: .4rem;
 }
 
 .generator__weights-grid {
   display: flex;
-  gap: .65rem;
+  gap: .45rem;
   flex-wrap: wrap;
   align-items: center;
 }
@@ -523,9 +523,9 @@ body.campaign-page {
 }
 
 .generator__weights-hint {
-  margin-top: .65rem;
+  margin-top: .45rem;
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 12px;
 }
 
 .dot {
@@ -542,13 +542,13 @@ body.campaign-page {
 .ig-rows {
   display: flex;
   flex-direction: column;
-  gap: .55rem;
+  gap: .35rem;
 }
 
 .ig-row {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  gap: .4rem;
+  gap: .28rem;
 }
 
 @media (max-width: 1100px) {
@@ -556,17 +556,17 @@ body.campaign-page {
 }
 
 .ig-btn {
-  border-radius: 14px;
+  border-radius: 12px;
   border: 1px solid var(--border);
   background: rgba(255,255,255,.03);
   color: var(--text);
   cursor: pointer;
-  padding: .55rem .3rem;
+  padding: .35rem .15rem;
   transition: .15s;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60px;
+  min-height: 50px;
   position: relative;
 }
 
@@ -582,8 +582,8 @@ body.campaign-page {
 
 .ig-btn::before {
   content: '';
-  width: 58px;
-  height: 52px;
+  width: 46px;
+  height: 42px;
   display: block;
   flex: 0 0 auto;
   background-position: center;
@@ -623,7 +623,6 @@ body.campaign-page {
 .ig-row--red .ig-btn[data-type="Food"]::before { background-image: url('images/item-icons/original/red/food.png'); }
 .ig-row--red .ig-btn[data-type="Chems"]::before { background-image: url('images/item-icons/original/red/chems.png'); }
 .ig-row--red .ig-btn[data-type="PowerArmor"]::before { background-image: url('images/item-icons/original/red/power-armor.png'); }
-}
 
 .ig-btn:hover {
   border-color: #3a86ff55;
@@ -645,37 +644,72 @@ body.campaign-page {
   display: flex;
   gap: .55rem;
   flex-wrap: wrap;
-  margin-top: .75rem;
+  margin-top: .5rem;
 }
 
 .generator__results {
-  margin-top: 1rem;
+  margin-top: .75rem;
   background: #0c0f13;
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: .85rem .9rem .95rem;
+  padding: .7rem .75rem .8rem;
 }
 
 .generator__results-footer {
   display: flex;
   justify-content: flex-start;
-  margin-top: 1rem;
+  margin-top: .65rem;
 }
 
 .gen-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  grid-template-columns: repeat(4, 168px);
   grid-template-rows: repeat(2, auto);
-  gap: .85rem;
-  max-height: calc(2 * (var(--card-height, 240px) + .85rem));
-  overflow-y: auto;
+  gap: .65rem;
+  justify-content: center;
 }
 
 @media (max-width: 1100px) {
   .gen-grid { 
-    grid-template-columns: repeat(2, minmax(160px, 1fr));
+    grid-template-columns: repeat(2, 148px);
     grid-template-rows: repeat(4, auto);
   }
+}
+
+.gen-grid .card-tile {
+  border-radius: 14px;
+}
+
+.gen-grid .card-tile__img {
+  aspect-ratio: 3 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0c0f13;
+}
+
+.gen-grid .card-tile__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gen-grid .card-tile__body {
+  padding: .42rem .5rem .5rem;
+  gap: .25rem;
+}
+
+.gen-grid .card-tile__title {
+  font-size: 11.5px;
+}
+
+.gen-grid .card-tile__meta {
+  font-size: 10.5px;
+}
+
+.gen-grid .card-tile__actions .btn {
+  padding: .18rem .38rem;
+  font-size: 10.5px;
 }
 
 .placeholder {
