@@ -663,16 +663,23 @@ body.campaign-page {
 
 .gen-grid {
   display: grid;
-  grid-template-columns: repeat(4, 168px);
+  grid-template-columns: repeat(5, 146px);
   grid-template-rows: repeat(2, auto);
-  gap: .65rem;
+  gap: .6rem;
   justify-content: center;
 }
 
 @media (max-width: 1100px) {
   .gen-grid { 
+    grid-template-columns: repeat(4, 148px);
+    grid-template-rows: repeat(3, auto);
+  }
+}
+
+@media (max-width: 820px) {
+  .gen-grid {
     grid-template-columns: repeat(2, 148px);
-    grid-template-rows: repeat(4, auto);
+    grid-template-rows: repeat(5, auto);
   }
 }
 

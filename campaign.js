@@ -120,6 +120,7 @@
   // -------------------- state --------------------
   const STORAGE_KEY = 'fww_campaign_state_v2';
   const SPECIAL_MOD_KEYS = ['str', 'per', 'end', 'cha', 'int', 'agi', 'luc'];
+  const GENERATED_ITEMS_LIMIT = 10;
 
   function makeDefaultSpecialMods() {
     return {
@@ -1777,8 +1778,8 @@
       return;
     }
 
-    // Ограничиваем до 8 карт максимум (2 ряда по 4)
-    const displayItems = gen.generated.slice(-8);
+    // Показываем до 10 карт максимум (2 ряда по 5)
+    const displayItems = gen.generated.slice(-GENERATED_ITEMS_LIMIT);
     
     displayItems.forEach((itemId, idx) => {
       const actualIdx = gen.generated.length - displayItems.length + idx;
@@ -1821,9 +1822,9 @@
     
     gen.generated.push(item.id);
 
-    // Ограничиваем до 8 карт максимум (2 ряда по 4) - удаляем самые старые
-    if (gen.generated.length > 8) {
-      gen.generated = gen.generated.slice(-8);
+    // Ограничиваем до 10 карт максимум (2 ряда по 5) - удаляем самые старые
+    if (gen.generated.length > GENERATED_ITEMS_LIMIT) {
+      gen.generated = gen.generated.slice(-GENERATED_ITEMS_LIMIT);
     }
 
     renderGenResults();
@@ -2228,23 +2229,34 @@
 </head>
 <body>
   ${pages}
-  <script>
-    window.addEventListener('load', function () {
-      var images = Array.prototype.slice.call(document.images || []);
-      Promise.all(images.map(function (img) {
-        return img.complete ? Promise.resolve() : new Promise(function (resolve) {
-          img.onload = img.onerror = resolve;
-        });
-      })).then(function () {
-        setTimeout(function () {
-          window.focus();
-          window.print();
-        }, 200);
-      });
-    });
-  </script>
 </body>
 </html>`;
+  }
+
+  let activePrintFrame = null;
+
+  function cleanupPrintFrame(frame) {
+    if (!frame) return;
+    if (activePrintFrame === frame) activePrintFrame = null;
+    if (frame.parentNode) frame.parentNode.removeChild(frame);
+  }
+
+  function waitForDocumentImages(doc) {
+    const images = Array.from(doc?.images || []);
+    if (!images.length) return Promise.resolve();
+
+    return Promise.all(images.map((img) => {
+      if (img.complete) return Promise.resolve();
+      return new Promise((resolve) => {
+        const done = () => {
+          img.removeEventListener('load', done);
+          img.removeEventListener('error', done);
+          resolve();
+        };
+        img.addEventListener('load', done, { once: true });
+        img.addEventListener('error', done, { once: true });
+      });
+    }));
   }
 
   function exportCampaignPdf() {
@@ -2254,15 +2266,69 @@
       return;
     }
 
-    const printWindow = window.open('', '_blank', 'noopener');
-    if (!printWindow) {
-      alert('Браузер заблокировал окно печати. Разрешите всплывающие окна и повторите.');
+    cleanupPrintFrame(activePrintFrame);
+
+    const printFrame = document.createElement('iframe');
+    printFrame.setAttribute('aria-hidden', 'true');
+    printFrame.tabIndex = -1;
+    printFrame.style.position = 'fixed';
+    printFrame.style.right = '0';
+    printFrame.style.bottom = '0';
+    printFrame.style.width = '1px';
+    printFrame.style.height = '1px';
+    printFrame.style.opacity = '0.01';
+    printFrame.style.pointerEvents = 'none';
+    printFrame.style.border = '0';
+    printFrame.style.background = 'transparent';
+    activePrintFrame = printFrame;
+    document.body.appendChild(printFrame);
+
+    const frameWin = printFrame.contentWindow;
+    const frameDoc = printFrame.contentDocument || frameWin?.document;
+    if (!frameWin || !frameDoc) {
+      cleanupPrintFrame(printFrame);
+      alert('Не удалось подготовить документ печати.');
       return;
     }
 
-    printWindow.document.open();
-    printWindow.document.write(buildCampaignPrintHtml(units));
-    printWindow.document.close();
+    frameDoc.open();
+    frameDoc.write(buildCampaignPrintHtml(units));
+    frameDoc.close();
+
+    waitForDocumentImages(frameDoc).then(() => {
+      if (activePrintFrame !== printFrame) return;
+
+      let cleaned = false;
+      const cleanup = () => {
+        if (cleaned) return;
+        cleaned = true;
+        setTimeout(() => cleanupPrintFrame(printFrame), 300);
+      };
+
+      try {
+        frameWin.addEventListener('afterprint', cleanup, { once: true });
+      } catch {
+        // ignore
+      }
+
+      setTimeout(() => {
+        if (activePrintFrame !== printFrame) return;
+        try {
+          frameWin.focus();
+          frameWin.print();
+        } catch {
+          cleanup();
+          alert('Не удалось открыть диалог печати. Попробуйте снова.');
+          return;
+        }
+
+        // Fallback for browsers that do not fire afterprint from iframe printing.
+        setTimeout(cleanup, 1500);
+      }, 180);
+    }).catch(() => {
+      cleanupPrintFrame(printFrame);
+      alert('Не удалось подготовить изображения для печати.');
+    });
   }
 
   // -------------------- bindings --------------------
