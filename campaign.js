@@ -2178,11 +2178,11 @@
   <meta charset="utf-8">
   <title>${title}</title>
   <style>
-    @page { size: A4 landscape; margin: 5mm; }
+    @page { size: A4 landscape; margin: 4mm; }
     * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     html, body { margin: 0; padding: 0; background: #fff; color: #000; font-family: Arial, sans-serif; }
-    body { font-size: 8.5pt; }
-    .print-unit-page { min-height: 100%; page-break-after: always; }
+    body { font-size: 8pt; }
+    .print-unit-page { min-height: 100%; page-break-after: always; break-inside: avoid; }
     .print-unit-page:last-child { page-break-after: auto; }
     .print-sheet-header { display: flex; justify-content: space-between; align-items: flex-end; margin: 0 0 2mm; font-size: 7.5pt; color: #444; }
     .print-sheet-header__meta { display: flex; gap: 4mm; flex-wrap: wrap; }
@@ -2201,24 +2201,24 @@
     .print-field.span-2 { grid-column: span 2; }
     .print-field.span-3 { grid-column: span 3; }
     .print-field.span-4 { grid-column: span 4; }
-    .print-field__label { font-size: 6.7pt; margin-bottom: .6mm; color: #333; }
-    .print-field__value { min-height: 6.8mm; border: .3mm solid #111; border-radius: 2.4mm; padding: 1mm 1.5mm; display: flex; align-items: center; overflow: hidden; }
-    .print-panel--right { display: flex; flex-direction: column; gap: 1.8mm; }
-    .print-section { display: flex; flex-direction: column; gap: 1.6mm; }
-    .print-section__title { font-size: 9pt; font-weight: 700; }
-    .print-slot-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.6mm; }
-    .print-tile-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1.6mm; }
-    .print-tile { border: .3mm solid #111; border-radius: 3mm; overflow: hidden; display: flex; flex-direction: column; background: #fff; min-height: 22mm; }
+    .print-field__label { font-size: 6.1pt; margin-bottom: .35mm; color: #333; }
+    .print-field__value { min-height: 5.8mm; border: .3mm solid #111; border-radius: 2.1mm; padding: .7mm 1.2mm; display: flex; align-items: center; overflow: hidden; }
+    .print-panel--right { display: flex; flex-direction: column; gap: 1.2mm; }
+    .print-section { display: flex; flex-direction: column; gap: 1mm; }
+    .print-section__title { font-size: 8.4pt; font-weight: 700; }
+    .print-slot-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1mm; }
+    .print-tile-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1mm; }
+    .print-tile { border: .3mm solid #111; border-radius: 2.4mm; overflow: hidden; display: flex; flex-direction: column; background: #fff; min-height: 0; }
     .print-tile--empty { justify-content: center; }
-    .print-tile__img { aspect-ratio: 3 / 2; border-bottom: .25mm solid #ccc; display: flex; align-items: center; justify-content: center; padding: 1mm; }
-    .print-tile--portrait .print-tile__img { aspect-ratio: 63 / 88; }
+    .print-tile__img { height: 17mm; border-bottom: .25mm solid #ccc; display: flex; align-items: center; justify-content: center; padding: .6mm; }
+    .print-tile--portrait .print-tile__img { height: 17mm; }
     .print-tile__img img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-    .print-tile__body { padding: 1mm 1.1mm 1.2mm; display: flex; flex-direction: column; gap: .45mm; }
-    .print-tile__title { font-size: 6.2pt; font-weight: 700; line-height: 1.15; }
-    .print-tile__meta { font-size: 5.8pt; color: #444; line-height: 1.15; }
+    .print-tile__body { padding: .7mm .9mm .8mm; display: flex; flex-direction: column; gap: .25mm; }
+    .print-tile__title { font-size: 5.8pt; font-weight: 700; line-height: 1.05; }
+    .print-tile__meta { font-size: 5.2pt; color: #444; line-height: 1.05; }
     .print-empty-note { border: .3mm dashed #888; border-radius: 3mm; padding: 4mm; font-size: 8pt; color: #555; }
-    .print-details-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.7mm; }
-    .print-field--notes .print-field__value { min-height: 9mm; align-items: flex-start; }
+    .print-details-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1mm; }
+    .print-field--notes .print-field__value { min-height: 6.4mm; align-items: flex-start; }
     .print-stats-wrap { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.7mm; }
     .print-stats-box { border: .3mm solid #111; border-radius: 3mm; padding: 1.4mm 1.7mm; }
     .print-stats-box__title { font-size: 8pt; font-weight: 700; margin-bottom: 1mm; }
